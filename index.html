@@ -15,7 +15,7 @@
         <div class="page-header"><h1>IBViz <small>Interactive Biology Visualizations</small></h1></div>
         
         
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs" role="tablist">    
           <li class="active"><a href="#">Tree Viewer</a></li>
         <!--
           <li><a href="#">Profile</a></li>
@@ -23,6 +23,15 @@
         
         -->
         </ul>
+        
+        <!-- Newick file loader -->
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3>Newick Loader</h3></div>
+            <div class="panel-body">Enter Newick data.</div>
+            <textarea class="form-control" rows="3"></textarea>
+            <button type="button" class="btn btn-primary">Primary</button>
+        </div>
+        
         <div class="container">
         <div class="main_feature">
             <div class="zach"></div>
@@ -32,8 +41,9 @@
     <script src="components/bower_components/d3/d3.min.js"></script>
     <script src="components/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="components/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="components/newick.js/src/newick.js"></script>
     <script src="tree_viewer/data/data.js"></script>
-    <script src="tree_viewer/js/test.js"></script>
+    <script src="tree_viewer/js/treeviewer.js"></script>
     
 
 </div>

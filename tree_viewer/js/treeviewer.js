@@ -4,11 +4,11 @@
 // Authors: Zach Sailer
 
 var TreeViewer = function (selector, data) {
-    
+    // TreeViewer class creates a phylogenetic tree viewer 
     var that = this;
     this.selector = selector
     this.data = data
-    this.width = 400;
+    this.width = parseInt($("#main_page").css("width"));
     this.height = 700;
     this.cluster = d3.layout.cluster()
                                 .size([this.height, this.width-200]);
@@ -17,13 +17,12 @@ var TreeViewer = function (selector, data) {
         .projection(function(d) { 
             return [d.y, d.x]; });
 
-    this.line = d3.svg.line()
+    // Create an SVG canvas for vizualization
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
         .append("g")
             .attr("transform", "translate(40,0)");
-        
 
     if (data == null) {
     } else {
@@ -33,11 +32,11 @@ var TreeViewer = function (selector, data) {
 };
 
 
-TreeViewer.prototype.clade = function() {
-    // Build a clade
+TreeViewer.prototype.create_clade = function(node) {
+    // Build a polygon triangle that represents a clade
     var clade = new Object();
     
-    clade.area = 5000;//node.size
+    clade.area = node.size;//node.size
     clade.x = 0;//node.x;
     clade.y = 0;//node.y;
     clade.width = 100;
@@ -50,11 +49,29 @@ TreeViewer.prototype.clade = function() {
     return clade;
 };
 
-
-TreeViewer.prototype.attach_clade = function(selector) {
-    clade = this.clade();
-    selector.append("polygon").attr("points", clade.points);
+TreeViewer.prototype.node_representation = function(node_selector) {
+    // Node representations
     
+    // Dots represent nodes
+    node_selector.append("circle")
+        .attr("r", 3.5);
+    
+        // If the node has a size associated with it, a clade will appear
+    node_selector.append("polygon").attr("points", function(d) {
+        if ('size' in d) {
+            
+            var area = d.size;//node.size
+            var width = 50;
+            var height = area/(width);
+            var v1 = "0,0";
+            var v2 = String([width, height/2]);
+            var v3 = String([width, -height/2]);
+            var points = v1 + " " + v2 + " " + v3;
+            return points;
+        } else {
+            return "0,0 0,0 0,0";
+        };
+    });
 };
 
 
@@ -67,12 +84,13 @@ TreeViewer.prototype.create_links = function(nodes) {
     return this.links
 };
 
+
 TreeViewer.prototype.init_tree = function(root) {
     // Initializes a d3 tree. 
     this.nodes = this.cluster.nodes(root),
     this.links = this.create_links(this.nodes);
     
-        
+    
     this.link = this.svg.selectAll(".link")
                     .data(this.links, function(d) { return d.id; })
                     .enter().append("path")
@@ -86,66 +104,61 @@ TreeViewer.prototype.init_tree = function(root) {
                             .attr("class", "node")
                             .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
 
-    this.node.append("circle")
-        .attr("r", 4.5);
-
+    
     this.node.append("text")
-                .attr("dx", function(d) { return d.children ? -8 : 8; })
-                .attr("dy", 3)
+                .attr("dx", function(d) { return d.children ? 6 : 6; })
+                .attr("dy", 0)
                 .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
                 .text(function(d) { return d.name; });
+                
+                this.node_representation(this.node);
 };
 
 
 TreeViewer.prototype.update_tree = function(root) {
-  
-    console.log(this.nodes)
+    // build new cluster/dendrogram from updated data
     this.nodes = this.cluster.nodes(root),
     this.links = this.create_links(this.nodes);
       
+    // Attach this new data to links and nodes.  
     this.link = this.svg.selectAll(".link")
                 .data(this.links, function(d) { return d.id; });
                 
     this.node = this.svg.selectAll(".node")
                 .data(this.nodes, function(d) { return d.name; });
         
-        
-    this.links_update = this.link.transition()
-                            .duration(2000)
-                            //.append("path")
-                                .attr("class", "link")
-                                .attr("d", this.diagonal);
+    // Update the links and nodes that still exists    
+    this.link.transition()
+        .duration(2000)
+        .attr("class", "link")
+        .attr("d", this.diagonal);
                                 
-    this.nodes_update = this.node.transition()
-                            .duration(2000)
-                            //.append("g")
-                                .attr("class", "node")
-                                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+    this.node.transition()
+        .duration(2000)
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
                                
-    
-    this.links_exit = this.link.exit().transition().remove();
-                        //.duration(2000).remove();
+    // Exit all nodes and links that aren't in new data.
+    this.link.exit().transition().duration.remove();
                         
-    this.links_exit = this.node.exit().transition().remove();
-                        //.duration(2000).remove();
+    this.node.exit().transition().remove();
 
+    // Enter any node or links that weren't available before
+    this.link.enter()
+        .append("path")
+        .attr("class", "link")
+        .attr("d", this.diagonal);
 
-    this.links_enter = this.link.enter()
-                        .append("path")
-                        .attr("class", "link")
-                        .attr("d", this.diagonal);
+    this.node.enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
-
-    this.nodes_enter = this.node.enter()
-                            .append("g")
-                            //.transition().duration(2000)
-                            .attr("class", "node")
-                            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+    this.node_representation(this.node);
 };
 
 var tree_viewer = new TreeViewer(".zach", null);
-
 var test = new Data();
 tree_viewer.init_tree(test.data);
-tree_viewer.update_tree(test.data2);
-tree_viewer.update_tree(test.data3);
+//tree_viewer.update_tree(test.data2);
+//tree_viewer.update_tree(test.data3);
