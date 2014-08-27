@@ -1,57 +1,7 @@
 // Copyright (c) Harms Lab
 // University of Oregon
 
-data = {"name": "Level 1",
-             "children": [
-              {
-               "name": "Level 2",
-               "children": [
-                {
-                 "name": "Level 3,a",
-                 "children": [
-                  {"name": "Level 4,a", "size": 3938},
-                  {"name": "Level 4,b", "size": 3812},
-                  {"name": "Level 4,c", "size": 743}
-                 ]
-                },
-                {
-                 "name": "Level 3,b",
-                 "children": [
-                  {"name": "Level 4,d", "size": 3534},
-                  {"name": "Level 4,e", "size": 5731}
-                 ]
-                }
-               ]
-              }
-             ]
-            };
-            
-data2 = {"name": "Level 1",
-             "children": [
-              {
-               "name": "Level 2",
-               "children": [
-                {
-                 "name": "Level 3,a"
-                },
-                {
-                 "name": "Level 3,b",
-                 "children": [
-                  {
-                   "name": "Level 4,d", "size": 3534,
-                   "children": [
-                    {"name": "Level 4,a", "size": 3938},
-                    {"name": "Level 4,b", "size": 3812},
-                    {"name": "Level 4,c", "size": 743}
-                   ]
-                  },
-                  {"name": "Level 4,e", "size": 5731}
-                 ]
-                }
-               ]
-              }
-             ]
-            };
+// Authors: Zach Sailer
 
 var TreeViewer = function (selector, data) {
     
@@ -76,7 +26,6 @@ var TreeViewer = function (selector, data) {
         
 
     if (data == null) {
-        console.log("no data")
     } else {
         this.data = data
     };
@@ -109,27 +58,36 @@ TreeViewer.prototype.attach_clade = function(selector) {
 };
 
 
+TreeViewer.prototype.create_links = function(nodes) {
+    // use D3 cluster links to create path links and give them unique IDs
+    this.links = this.cluster.links(nodes);
+    for (i = 0; i < this.links.length; i++) {
+        this.links[i].id = this.links[i].source.name+", "+this.links[i].target.name;
+    };
+    return this.links
+};
+
 TreeViewer.prototype.init_tree = function(root) {
     // Initializes a d3 tree. 
     this.nodes = this.cluster.nodes(root),
-    this.links = this.cluster.links(this.nodes);
-
-
+    this.links = this.create_links(this.nodes);
+    
+        
     this.link = this.svg.selectAll(".link")
-                    .data(this.links)
+                    .data(this.links, function(d) { return d.id; })
                     .enter().append("path")
                         .attr("class", "link")
                         .attr("d", this.diagonal);
 
 
     this.node = this.svg.selectAll(".node")
-                    .data(this.nodes)
+                    .data(this.nodes, function(d) { return d.name; })
                     .enter().append("g")
                             .attr("class", "node")
                             .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
 
-    //this.node.append("circle")
-      //  .attr("r", 4.5);
+    this.node.append("circle")
+        .attr("r", 4.5);
 
     this.node.append("text")
                 .attr("dx", function(d) { return d.children ? -8 : 8; })
@@ -141,74 +99,53 @@ TreeViewer.prototype.init_tree = function(root) {
 
 TreeViewer.prototype.update_tree = function(root) {
   
-  
+    console.log(this.nodes)
     this.nodes = this.cluster.nodes(root),
-    this.links = this.cluster.links(this.nodes);
+    this.links = this.create_links(this.nodes);
       
-    this.link2 = this.svg.selectAll(".link")
-                .data(this.links1, function(d) { return d; });
+    this.link = this.svg.selectAll(".link")
+                .data(this.links, function(d) { return d.id; });
                 
-    this.node2 = this.svg.selectAll(".node")
-                .data(this.nodes1, function(d) { return d; });
-                    
-    this.node.append("circle")
-        .attr("r", 4.5);
+    this.node = this.svg.selectAll(".node")
+                .data(this.nodes, function(d) { return d.name; });
         
+        
+    this.links_update = this.link.transition()
+                            .duration(2000)
+                            //.append("path")
+                                .attr("class", "link")
+                                .attr("d", this.diagonal);
+                                
+    this.nodes_update = this.node.transition()
+                            .duration(2000)
+                            //.append("g")
+                                .attr("class", "node")
+                                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+                               
+    
+    this.links_exit = this.link.exit().transition().remove();
+                        //.duration(2000).remove();
+                        
+    this.links_exit = this.node.exit().transition().remove();
+                        //.duration(2000).remove();
+
+
     this.links_enter = this.link.enter()
                         .append("path")
                         .attr("class", "link")
                         .attr("d", this.diagonal);
-                        
+
+
     this.nodes_enter = this.node.enter()
                             .append("g")
+                            //.transition().duration(2000)
                             .attr("class", "node")
                             .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-    
-    this.links_update = this.link.transition()
-                            .duration(2000);
-    this.nodes_update = this.node.transition()
-                            .duration(2000);
-    
-    
-    this.links_exit = this.link.exit().transition()
-                        .duration(2000).remove();
-                        
-    this.links_exit = this.node.exit().transition()
-                        .duration(2000).remove();
-    /*
-    this.link.enter()
-        .append("path")
-            .attr("class", "link")
-            .attr("d", this.diagonal)
-            .transition().duration(2000);
-
-    this.node.enter()
-        .append("g")
-            .attr("class", "node")
-            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-            .transition().duration(750);
-                    
-            
-    this.node.append("circle")
-      .transition().duration(750)
-      .attr("r", 9);
-
-    this.node.append("text")
-      .attr("dx", function(d) { return d.children ? -8 : 8; })
-      .attr("dy", 3)
-      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-      .text(function(d) { return d.name; });
-      
-    this.link.exit().transition();
-    this.node.exit().transition();
-      
-      //node.exit();
-      //link.exit();
-    */
 };
 
 var tree_viewer = new TreeViewer(".zach", null);
 
-
-tree_viewer.init_tree(data);
-tree_viewer.update_tree(data2);
+var test = new Data();
+tree_viewer.init_tree(test.data);
+tree_viewer.update_tree(test.data2);
+tree_viewer.update_tree(test.data3);
