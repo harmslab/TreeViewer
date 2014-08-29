@@ -75,6 +75,12 @@ TreeViewer.prototype.node_representation = function(node_selector) {
 };
 
 
+TreeViewer.prototype.create_nodes = function(nodes) { 
+    this.nodes 
+
+};
+
+
 TreeViewer.prototype.create_links = function(nodes) {
     // use D3 cluster links to create path links and give them unique IDs
     this.links = this.cluster.links(nodes);
@@ -86,8 +92,9 @@ TreeViewer.prototype.create_links = function(nodes) {
 
 
 TreeViewer.prototype.init_tree = function(root) {
-    // Initializes a d3 tree. 
-    this.nodes = this.cluster.nodes(root),
+    // Initializes a d3 tree.
+    console.log(root)
+    this.nodes = this.cluster.nodes(root);
     this.links = this.create_links(this.nodes);
     
     
@@ -109,7 +116,13 @@ TreeViewer.prototype.init_tree = function(root) {
                 .attr("dx", function(d) { return d.children ? 6 : 6; })
                 .attr("dy", 0)
                 .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-                .text(function(d) { return d.name; });
+                .text(function(d) { 
+                    if (d.name.substring(0,5) == "split") {
+                        
+                    } else {
+                        return d.name;
+                    }
+                });
                 
                 this.node_representation(this.node);
 };
@@ -139,7 +152,7 @@ TreeViewer.prototype.update_tree = function(root) {
         .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
                                
     // Exit all nodes and links that aren't in new data.
-    this.link.exit().transition().duration.remove();
+    this.link.exit().transition().remove();
                         
     this.node.exit().transition().remove();
 
@@ -157,8 +170,15 @@ TreeViewer.prototype.update_tree = function(root) {
     this.node_representation(this.node);
 };
 
+/*
 var tree_viewer = new TreeViewer(".zach", null);
 var test = new Data();
-tree_viewer.init_tree(test.data);
+
+var zach = this.Newick.parse(
+    "(Edentata:55, (((Orycteropus:12, Trichechus:43):1, (Procavia:29, (Elephas:18, Loxodonta:5):55):10):15, (((Chiroptera:27, (Tupaia:43, ((Talpa:24, (Suncus:24, Erinaceus:58):6):4, (Manis:5, ((Felis:13, Leo:7):32, ((Canis:37, Ursidae:12):4, ((Phocidae:19, Zalophus:17):7, (Procyonidae:12, Mustelidae:22):9):5):17):13):3):10):6):8, (((Lemuridae:46, (Galago:16, Nycticebus:27):10):8, (Tarsius:15, ((Cebus:10, (Atelinae:5, (Aotus:6, Callithrix:9):3):3):18, ((Hylobates:6, (Pongo:1, (Gorilla:2, (Homo:22, Pan:1):2):6):2):5, (Presbytis:1, (Cercopithecus:1, (Erythrocebus:0, ('Macaca fascicularis':2, ('Macaca mulatta':5, 'Macaca fuscata':0):1, (Theropithecus:2, Papio:4):15):2):1):8):6):9):22):10):13, ((Ochotona:7, Oryctolagus:54):4, (Caviomorpha:107, (Spermophilus:29, (Spalax:23, ((Rattus:71, Mus:19):15, (Ondatra:27, Mesocricetus:32):27):20):8):12):15):11):9):12, ((Sus:50, ((Lama:10, Camelus:24):31, (Hippopotamus:31, (((Ovis:9, Capra:8):19, ((Antilocapra:13, Giraffa:14):7, (Cervus:8, Alces:9):11):2):9, (Tragelaphinae:6, ('Bos grunniens':6, (Bison:5, 'Bos taurus':15):7):11):6):47):10):19):18, ((('Equus (Asinus)':6, 'Equus caballus':31):24, (Tapirus:19, Rhinocerotidae:23):11):22, ((Phocoena:4, Tursiops:17):5, (Balaenoptera:36, Eschrichtius:2):8):29):12):12):16):55);"
+)
+tree_viewer.init_tree(zach);
 //tree_viewer.update_tree(test.data2);
 //tree_viewer.update_tree(test.data3);
+
+*/

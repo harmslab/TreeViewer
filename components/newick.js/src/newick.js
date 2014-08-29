@@ -63,6 +63,9 @@
 
 (function(exports) {
   exports.parse = function(s) {
+      // added by Zach Sailer
+      var iterate_name = 1
+      //
     var ancestors = [];
     var tree = {};
     var tokens = s.split(/\s*(;|\(|\)|,|:)\s*/);
@@ -88,7 +91,14 @@
         default:
           var x = tokens[i-1];
           if (x == ')' || x == '(' || x == ',') {
-            tree.name = token;
+              // added by Zach Sailer
+              if (typeof token != "string" || token == ""){
+                  tree.name = "split" + String(iterate_name);
+                  iterate_name += 1
+              } else {
+                  tree.name = token;
+              }
+              //
           } else if (x == ':') {
             tree.size = parseFloat(token);
           }
