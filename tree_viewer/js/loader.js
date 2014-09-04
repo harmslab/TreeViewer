@@ -5,14 +5,16 @@ var LoaderWidget = function(selector, newick) {
     var that = this;
     this.selector = selector;
     this.newick = newick;
+    this.width = parseInt($(this.selector).css("width"));
     
     // Build widget window
     this.loader_window = $("<div>").addClass("panel panel-default")
-                                    .attr("id", "loader-widget")
-                                    .append("<div class='panel-heading'>")
-                                    .append("<div class='panel-body' id='loader-body'>");
+                            .attr("id", "loader-widget")
+                            .attr('width', this.width)
+                            .append("<div class='panel-heading'>")
+                            .append("<div class='panel-body' id='loader-body'>");
     
-    this.selector.append(this.loader_window);                               
+    $(this.selector).append(this.loader_window);                               
     
     // Build the form
     $("#loader-body")
@@ -22,28 +24,28 @@ var LoaderWidget = function(selector, newick) {
                     .attr("rows", 4)
         )
         .append(
-                $("<button>").addClass("btn btn-primary").attr("id", "load-button")
-                                .text("Load").click(this, this.on_click)
+                $("<button>").addClass("btn btn-primary")
+                    .attr("id", "load-button")
+                    .text("Load")
         );         
     
-    
-    
+    this.load_button = "#load-button";
+    this.load_form = "loader-data";
 };
 
 LoaderWidget.prototype.toJSON = function(newick) {
     // Convert newick string to JSON for loading into D3
-    var tree = this.newick.parse(newick);
+    var tree = Newick.parse(newick);
     return tree;
     
 };
 
-LoaderWidget.prototype.on_click = function(event) {
+LoaderWidget.prototype.on_click = function(loaderwidget) {
     // Handle click from loader widget
-    var that = event.data
+    var that = loaderwidget;
     var text = $("#loader-data").val();
-    that.json = that.toJSON(text);
-    
+    return that.toJSON(text);
 };
 
 
-var loader = new LoaderWidget($(".main_feature"), this.Newick);
+//var loader = new LoaderWidget($(".main_feature"), this.Newick);

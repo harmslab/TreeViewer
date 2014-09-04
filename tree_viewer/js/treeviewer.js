@@ -3,13 +3,13 @@
 
 // Authors: Zach Sailer
 
-var TreeViewer = function (selector, data) {
+var TreeViewer = function (selector) {
     // TreeViewer class creates a phylogenetic tree viewer 
     var that = this;
-    this.selector = selector
-    this.data = data
-    this.width = parseInt($("#main_page").css("width"));
-    this.height = 700;
+    this.selector = selector;
+    this.data = null;
+    this.width = parseInt($(this.selector).css("width"));
+    this.height = 700; 
     this.cluster = d3.layout.cluster()
                                 .size([this.height, this.width-200]);
                                 
@@ -23,8 +23,8 @@ var TreeViewer = function (selector, data) {
         .attr("height", this.height)
         .append("g")
             .attr("transform", "translate(40,0)");
-
-    if (data == null) {
+//*/
+    if (this.data == null) {
     } else {
         this.data = data
     };
@@ -93,7 +93,6 @@ TreeViewer.prototype.create_links = function(nodes) {
 
 TreeViewer.prototype.init_tree = function(root) {
     // Initializes a d3 tree.
-    console.log(root)
     this.nodes = this.cluster.nodes(root);
     this.links = this.create_links(this.nodes);
     
