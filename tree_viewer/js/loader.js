@@ -47,5 +47,3 @@ LoaderWidget.prototype.on_click = function(loaderwidget) {
     return that.toJSON(text);
 };
 
-
-//var loader = new LoaderWidget($(".main_feature"), this.Newick);
