@@ -8,18 +8,18 @@ var Network = function (selector) {
     
     this.selector = selector;
     this.width = parseInt($(this.selector).css("width"));
-    this.height = 700; 
+    this.height = 900; 
     
     // Create an svg canvas for D3 plot
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
         .append("g")
-            .attr("transform", "translate(40,0)");
+            .attr("transform", "translate(0,0)");
     
     this.force = d3.layout.force()
     .charge(-60)
-    .linkDistance(300)
+    .linkDistance(500)
     .size([this.width-10, this.height-10]);
             
 };
@@ -79,23 +79,24 @@ Network.prototype.build_cluster = function(graph) {
         .selectAll(".link")
         .data(graph.links)
         .enter().append("path")
-        .attr("class", "link");         // Change width later
+        .attr("class", "link");         
     
 
     var node = this.svg.selectAll(".node")
         .data(graph.nodes)
         .enter().append("circle")
         .attr("class", "node")
-        .attr("r", 10)
+        .attr("r", function (d) {
+            return d.value*300;
+        })
         .style("fill", "#000")
         .call(this.force.drag);
     
-        
     this.force.on("tick", function () {
         link 
         .attr("d", function (d) {
-            d['source']["radius"] = 5
-            d['target']["radius"] = 10
+            d['source']["radius"] = d.ssize*300;
+            d['target']["radius"] = d.tsize*300;
             // Chord function is a custom made chord similar to D3's chord
             // (Only without the necessity of Arc's)
             return chord(d);

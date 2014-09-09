@@ -31,7 +31,7 @@ var subgroup = function (f, angle) {
     return {
       r: f.radius,
       center: [f.px, f.py],
-      mid: [(f.radius/2)*Math.cos(angle - Math.PI/2), (f.radius/2)*Math.sin(angle - Math.PI/2)],
+      mid: [(f.radius/10)*Math.cos(angle - Math.PI/2), (f.radius/10)*Math.sin(angle - Math.PI/2)],
       p0: [f.px + f.radius*Math.cos(angle - Math.PI/2), f.py + f.radius*Math.sin(angle - Math.PI/2)],
       p1: [f.px + f.radius*Math.cos(angle + Math.PI/2), f.py + f.radius*Math.sin(angle + Math.PI/2)]
     };

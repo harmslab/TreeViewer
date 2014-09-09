@@ -3,12 +3,11 @@ var main = function () {
     $('#app_container').append('<div>').attr('id', 'network_viewer');
     
     this.selector = $('#network_viewer');
-    
-    
     this.network_viewer = new Network(this.selector[0]);
     
+    this.data = {'nodes': [{'name': 0, 'value': 0.19712303423890323}, {'name': 1, 'value': 0.24785220958119003}, {'name': 2, 'value': 0.16627904776687111}, {'name': 3, 'value': 0.16995370191641102}, {'name': 4, 'value': 0.20562007087602016}, {'name': 5, 'value': 0.20496366458701179}], 'links': [{'source': 0, 'tsize': 0.22578455278840204, 'target': 1, 'ssize': 0.19712303423890323}, {'source': 0, 'tsize': 0.14255758250643691, 'target': 2, 'ssize': 0.19712303423890323}, {'source': 0, 'tsize': 0.13136133745284662, 'target': 3, 'ssize': 0.19712303423890323}, {'source': 0, 'tsize': 0.16595021450616509, 'target': 4, 'ssize': 0.19712303423890323}, {'source': 0, 'tsize': 0.13722327850724622, 'target': 5, 'ssize': 0.19712303423890323}, {'source': 1, 'tsize': 0.1340562763529736, 'target': 2, 'ssize': 0.24785220958119003}, {'source': 1, 'tsize': 0.12720776322789576, 'target': 3, 'ssize': 0.24785220958119003}, {'source': 1, 'tsize': 0.15858420016194338, 'target': 4, 'ssize': 0.24785220958119003}, {'source': 1, 'tsize': 0.13600513905519873, 'target': 5, 'ssize': 0.24785220958119003}, {'source': 2, 'tsize': 0.14899864374918509, 'target': 3, 'ssize': 0.16627904776687111}, {'source': 2, 'tsize': 0.1873261421774669, 'target': 4, 'ssize': 0.16627904776687111}, {'source': 2, 'tsize': 0.15854527667609158, 'target': 5, 'ssize': 0.16627904776687111}, {'source': 3, 'tsize': 0.19329508589421601, 'target': 4, 'ssize': 0.16995370191641102}, {'source': 3, 'tsize': 0.16654882535341567, 'target': 5, 'ssize': 0.16995370191641102}, {'source': 4, 'tsize': 0.16358640479271114, 'target': 5, 'ssize': 0.20562007087602016}]}
     
-    this.data = 
+    /*
     {
       "nodes":[
         {"name":"Myriel","group":1},
@@ -347,6 +346,7 @@ var main = function () {
       ]
     };
     
+    */
     
     this.network_viewer.build_cluster(this.data);
     
