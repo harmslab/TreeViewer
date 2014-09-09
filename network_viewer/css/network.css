@@ -7,3 +7,8 @@
   stroke: #999;
   stroke-opacity: .6;
 }
+
+path {
+  stroke: #999;
+  stroke-width: 1;
+}

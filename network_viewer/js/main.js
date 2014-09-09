@@ -348,7 +348,7 @@ var main = function () {
     };
     
     
-    this.network_viewer.build_network(this.data);
+    this.network_viewer.build_cluster(this.data);
     
 };
 
