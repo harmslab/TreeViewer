@@ -6,6 +6,9 @@
 .link {
   stroke: #999;
   stroke-opacity: .6;
+  fill:#0000ff;
+  opacity: .4;
+  
 }
 
 path {
