@@ -23,7 +23,7 @@ var TreeViewer = function (selector) {
         .attr("height", this.height)
         .append("g")
             .attr("transform", "translate(40,0)");
-//*/
+
     if (this.data == null) {
     } else {
         this.data = data
@@ -56,7 +56,7 @@ TreeViewer.prototype.node_representation = function(node_selector) {
     node_selector.append("circle")
         .attr("r", 3.5);
     
-        // If the node has a size associated with it, a clade will appear
+    // If the node has a size associated with it, a clade will appear
     node_selector.append("polygon").attr("points", function(d) {
         if ('size' in d) {
             

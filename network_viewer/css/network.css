@@ -1,9 +1,9 @@
-.node {
+.graph_node {
   stroke: #555;
-  fill: #555;
+  fill: #777;
 }
 
-.link {
+.graph_link {
   stroke: #999;
   stroke-opacity: .6;
   fill:#0000ff;
@@ -14,4 +14,19 @@
 path {
   stroke: #999;
   stroke-width: 1;
+}
+
+.cluster_node {
+  stroke: #000;
+  stroke-width:2;
+  fill: #fff;
+  opacity: 1;
+}
+
+.cluster_link {
+  stroke: #999;
+  stroke-opacity: .6;
+  fill:#0000ff;
+  opacity: .4;
+  
 }

@@ -5,4 +5,4 @@ Scientific data is alive and dynamic, so why should your graphical interpretatio
 
 Meet IBViz. 
 
-IBViz is a project striving to create interactive visualization tools for the biological sciences. It employs D3.js to manipulate data and bring your plots/figures to life. This is a work-in-progress and is not ready for public use. Dependencie include D3.js, Bootstrap, and JQuery.
+IBViz is a project striving to create interactive visualization tools for the biological sciences. It employs D3.js to manipulate data and bring your plots/figures to life. This is a work-in-progress and is not ready for public use. Dependencies include D3.js, Bootstrap, and JQuery.
