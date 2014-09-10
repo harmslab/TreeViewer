@@ -8,7 +8,7 @@ var Network = function (selector) {
     
     this.selector = selector;
     this.width = parseInt($(this.selector).css("width"));
-    this.height = 900; 
+    this.height = 700; 
     
     // Create an svg canvas for D3 plot
     this.svg = d3.select(this.selector).append("svg")
@@ -18,8 +18,8 @@ var Network = function (selector) {
             .attr("transform", "translate(0,0)");
     
     this.graph_force = d3.layout.force()
-        .charge(-50)
-        .linkDistance(200)
+        .charge(-250)
+        .linkDistance(100)
         .size([this.width-10, this.height-10]);
         
     this.cluster_force = d3.layout.force()
@@ -38,18 +38,18 @@ Network.prototype.build_network = function(graph) {
         .start();
         
     
-    var graph_link = this.svg.selectAll(".link")
+    var graph_link = this.svg.selectAll(".graph_link")
         .data(graph.links)
         .enter().append("line")
-        .attr("class", "link")
+        .attr("class", "graph_link")
         .style("stroke_width", 10);         // Change width later
    
         
-    var graph_node = this.svg.selectAll(".node")
+    var graph_node = this.svg.selectAll(".graph_node")
         .data(graph.nodes)
         .enter().append("circle")
-        .attr("class", "node")
-        .attr("r", 5)
+        .attr("class", "graph_node")
+        .attr("r", 10)
         .attr("cx", function(d) {return d.x;})
         .attr("cy", function(d) {return d.y;})
         .style("fill", "#000")
@@ -129,7 +129,16 @@ Network.prototype.build_cluster = function(cluster) {
 
 Network.prototype.cluster_network = function(membership, graph, cluster){
     // Builds a D3 network from graph data (in JSON form).
-        
+    
+    var cluster_foci = {};
+    
+    for (var key in membership) {
+        if (!(membership[key] in cluster_foci)) {
+            cluster_foci[membership[key]] = {"value":0}
+        }
+        cluster_foci[membership[key]]["value"] += 1;
+    }
+    console.log(cluster_foci)
     var cluster_force = this.cluster_force;
     
     cluster_force
@@ -163,26 +172,29 @@ Network.prototype.cluster_network = function(membership, graph, cluster){
         .data(cluster.nodes)
         .enter().append("circle")
         .attr("class", "cluster_node")
-        .attr("r", function (d) { return d.value*300;})
+        .attr("r", function (d) { 
+            var total_area = 2 * cluster_foci[d.index]["value"] * 10 * 10;
+            var radius = Math.sqrt(total_area);
+            
+            return radius;})
         .call(cluster_force.drag);    
+
 
     var graph_node = this.svg.selectAll(".graph_node")
         .data(graph.nodes)
         .enter().append("circle")
         .attr("class", "graph_node")
-        .attr("r", 7)
+        .attr("r", 10)
         .attr("cx", function(d) {return d.x;})
         .attr("cy", function(d) {return d.y;})
         .style("fill", "#000")
         .call(graph_force.drag);
-
     
-    var cluster_foci = {0:{},1:{}, 2:{}, 3:{}, 4:{}, 5:{}};
     
     function graph_tick(e) {
 
       // Push different nodes in different directions for clustering.
-      var k = .6 * e.alpha;
+      var k = 1.4 * e.alpha;
       
       graph.nodes.forEach(function(o, i) {
         var member = membership[i]
@@ -201,8 +213,8 @@ Network.prototype.cluster_network = function(membership, graph, cluster){
         
         cluster_link 
             .attr("d", function (d) {
-                d['source']["radius"] = d.ssize*300;
-                d['target']["radius"] = d.tsize*300;
+                d['source']["radius"] = (Math.pow(d.ssize,3)*500);
+                d['target']["radius"] = (Math.pow(d.tsize,3)*500);
                 // Chord function is a custom made chord similar to D3's chord
                 // (Only without the necessity of Arc's)
                 return chord(d);

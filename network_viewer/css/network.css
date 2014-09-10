@@ -6,8 +6,9 @@
 .graph_link {
   stroke: #999;
   stroke-opacity: .6;
-  fill:#0000ff;
-  opacity: .4;
+  stroke-width:2;
+  fill:#000;
+  opacity: 1;
   
 }
 
