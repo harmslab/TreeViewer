@@ -11,8 +11,6 @@ var main = function () {
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
-        //.append("g")
-          //  .attr("transform", "translate(0,0)");
     
     
     this.cluster = {'nodes': [{'name': 0, 'value': 0.39821333564186712}, {'name': 1, 'value': 0.45124032100009126}, {'name': 2, 'value': 0.31300194030480682}], 'links': [{'source': 0, 'tsize': 0.35736963466472621, 'target': 1, 'ssize': 0.39821333564186712}, {'source': 0, 'tsize': 0.24441702969340673, 'target': 2, 'ssize': 0.39821333564186712}, {'source': 1, 'tsize': 0.24876169048477226, 'target': 2, 'ssize': 0.45124032100009126}]};
@@ -43,7 +41,8 @@ var main = function () {
     
     $("#uncluster").click(this, function(event){
         var that = event.data
-        that.network_viewer.build_network(that.network);
+        $("svg").empty();
+        that.network_viewer.build_network();
     });
 };
 

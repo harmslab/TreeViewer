@@ -19,7 +19,7 @@ path {
   stroke: #000;
   stroke-width:0;
   fill: #fff;
-  fill-opacity: .4;
+  fill-opacity: 1;
 }
 
 .cluster_link {

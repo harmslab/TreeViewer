@@ -10,13 +10,13 @@ var Clustering = function(svg, membership, network, clusters) {
     this.system = network.system;
     this.cluster_scale = 300;
     this.membership = membership;
+    this.transition_time = 2000;
 
     this.cluster_force = d3.layout.force()
         .charge(-60)
         .linkDistance(400)
         .size([this.width-10, this.height-10]);
 
-            
     // Create cluster foci info
     this.cluster_foci = {};
     for (var key in membership) {
@@ -38,13 +38,14 @@ Clustering.prototype.build_clusters = function() {
     var clusters = this.clusters;
     var cluster_force = this.cluster_force;
     var cluster_foci = this.cluster_foci;
+        
     
     cluster_force
         .start();
 
     var cluster_link = this.svg.selectAll(".cluster_link")
         .data(clusters.links)
-        .enter().append("path")
+        .enter().insert("path", ".graph_node")
         .attr("class", "cluster_link")
         .attr("d", function (d) {
             d['source']["radius"] = d.ssize*Math.sqrt(2 * cluster_foci[d.source.name]["value"] * 10 * 10);
@@ -57,7 +58,7 @@ Clustering.prototype.build_clusters = function() {
         
     var cluster_node = this.svg.selectAll(".cluster_node")
         .data(clusters.nodes)
-        .enter().append("circle")
+        .enter().insert("circle", ".graph_node")
         .attr("class", "cluster_node")
         .attr("r", function (d) {
             var total_area = 2 * cluster_foci[d.name]["value"] * 10 * 10;
@@ -105,8 +106,7 @@ Clustering.prototype.cluster_network = function(){
     
     this.build_clusters();
     this.cluster_force.stop();
-    this.network.graph_force.links({}).start().stop();
-        
+    this.network.graph_force.links({}).start().stop();    
         
     var system = this.system;
     var graph_force = this.network.graph_force;
@@ -128,59 +128,64 @@ Clustering.prototype.cluster_network = function(){
     
     graph_node
         .transition()
-        .duration(1500)
+        .duration(this.transition_time)
         .attr("cx", function(d){
+            // Move node towards a random spot around cluster center
             var member = membership[d.index];
-            return cluster_foci[member].x;
+            return cluster_foci[member].x + Math.pow(-1,parseInt(10*Math.random())) * Math.random() * 50;
         })
         .attr("cy", function(d){
+            // Move node towards a random spot around cluster center
             var member = membership[d.index];
-            return cluster_foci[member].y;
+            return cluster_foci[member].y + Math.pow(-1,parseInt(10*Math.random())) * Math.random() * 50;
         });
     
-        /*
-    function graph_tick(e) {
-
-      // Push different nodes in different directions for clustering.
-      var k = 1 * e.alpha;
-      
-      system.nodes.forEach(function(o, i) {
-        var member = membership[i]
-        o.y += (cluster_foci[member].y - o.y)*k;
-        o.x += (cluster_foci[member].x - o.x)*k;
-      });
     
-      graph_node
+    function graph_tick(e) {
+        // Push different nodes in different directions for clustering.
+        var k = .4 * e.alpha;
+
+        system.nodes.forEach(function(o, i) {
+            var member = membership[i]
+                o.y += (cluster_foci[member].y - o.y)*k;
+                o.x += (cluster_foci[member].x - o.x)*k;
+        });
+
+        graph_node
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
-      
     };
 
-    cluster_force.on("tick", function (d) {
+    function attach_nodes() {
+        cluster_force.on("tick", function (d) {
         
-        cluster_link 
-        .attr("d", function (d) {
-            d['source']["radius"] = d.ssize*Math.sqrt(2 * cluster_foci[d.source.name]["value"] * 10 * 10);
-            d['target']["radius"] = d.tsize*Math.sqrt(2 * cluster_foci[d.target.name]["value"] * 10 * 10);
-            // Chord function is a custom made chord similar to D3's chord
-            // (Only without the necessity of Arc's)
-            return chord(d);
+            cluster_link 
+            .attr("d", function (d) {
+                d['source']["radius"] = d.ssize*Math.sqrt(2 * cluster_foci[d.source.name]["value"] * 10 * 10);
+                d['target']["radius"] = d.tsize*Math.sqrt(2 * cluster_foci[d.target.name]["value"] * 10 * 10);
+                // Chord function is a custom made chord similar to D3's chord
+                // (Only without the necessity of Arc's)
+                return chord(d);
+            })
+        
+            cluster_node   
+                .attr("cx", function(d) { 
+                    cluster_foci[d.index]["x"] = d.x;
+                    return d.x; })
+                .attr("cy", function(d) { 
+                    cluster_foci[d.index]["y"] = d.y;
+                    return d.y; });
+        
+            graph_force
+                .on("tick", graph_tick)
+                .start();
+        
         })
-        
-        cluster_node   
-            .attr("cx", function(d) { 
-                cluster_foci[d.index]["x"] = d.x;
-                return d.x; })
-            .attr("cy", function(d) { 
-                cluster_foci[d.index]["y"] = d.y;
-                return d.y; });
-        
-        graph_force
-            .on("tick", graph_tick)
-            .start();
-    });
-    */
-    //cluster_force.start()
+        .start();
+    };
+    
+    // Wait for clusters to form before releasing
+    setTimeout(attach_nodes,this.transition_time);
     
     this.graph_node = graph_node;
     this.graph_link = graph_link;
@@ -194,126 +199,6 @@ Clustering.prototype.cluster_network = function(){
     
 };
 
-
-
-
-
-Clustering.prototype.cluster_network2 = function(membership, graph, cluster){
-    // Builds a D3 network from graph data (in JSON form).
-    
-    var cluster_foci = {};
-    
-    for (var key in membership) {
-        if (!(membership[key] in cluster_foci)) {
-            cluster_foci[membership[key]] = {"value":0}
-        }
-        cluster_foci[membership[key]]["value"] += 1;
-    }
-
-    var cluster_force = this.cluster_force;
-    
-    cluster_force
-        .nodes(cluster.nodes)
-        .links(cluster.links)
-        .start()
-        
-        
-    var graph_force = this.graph_force;
-
-    graph_force
-        .nodes(graph.nodes);
-
-        
-    var cluster_link = this.svg.selectAll(".cluster_link")
-        .data(cluster.links)
-        .enter().append("path")
-        .attr("class", "cluster_link");         
-
-
-    var cluster_node = this.svg.selectAll(".cluster_node")
-        .data(cluster.nodes)
-        .enter().append("circle")
-        .attr("class", "cluster_node")
-        .attr("r", function (d) { 
-            var total_area = 2 * cluster_foci[d.index]["value"] * 10 * 10;
-            var radius = Math.sqrt(total_area);
-            return radius;})
-        .call(cluster_force.drag);    
-
-    var test = 2;
-    var graph_node = this.svg.selectAll(".graph_node")
-        .data(graph.nodes)
-        .enter().append("circle")
-        .attr("class", "graph_node")
-        .attr("r", 10)
-        .attr("cx", function(d) {return d.x;})
-        .attr("cy", function(d) {return d.y;})
-        .style("fill", function(d) {
-            var member = membership[d.name];
-            if (member == test) {
-                console.log(d.name)
-                return "#ff0000";
-            } else {
-                return "#000";
-            }
-        })
-        .call(graph_force.drag);
-        
-        
-    function graph_tick(e) {
-
-      // Push different nodes in different directions for clustering.
-      var k = 0.7 * e.alpha;
-      
-      graph.nodes.forEach(function(o, i) {
-        var member = membership[i]
-        o.y += (cluster_foci[member].y - o.y)*k;
-        o.x += (cluster_foci[member].x - o.x)*k;
-      });
-    
-      graph_node
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; });
-      
-    };
-
-    
-    cluster_force.on("tick", function (d) {
-        
-        cluster_link 
-            .attr("d", function (d) {
-                d['source']["radius"] = (Math.pow(d.ssize,3)*300);
-                d['target']["radius"] = (Math.pow(d.tsize,3)*300);
-                // Chord function is a custom made chord similar to D3's chord
-                // (Only without the necessity of Arc's)
-                return chord(d);
-            })
-        
-        cluster_node   
-            .attr("cx", function(d) { 
-                cluster_foci[d.index]["x"] = d.x;
-                return d.x; })
-                
-            .attr("cy", function(d) { 
-                cluster_foci[d.index]["y"] = d.y;
-                return d.y; });
-        
-        graph_force
-            .on("tick", graph_tick)
-            .start();
-    });
-    
-    
-    this.graph_node = graph_node;
-    
-    this.cluster_link = cluster_link;
-    this.cluster_node = cluster_node;
-    this.cluster_foci = cluster_foci;
-    
-    this.graph_force = graph_force;
-    this.cluster_force = cluster.force;
-    
-};
 
 Clustering.prototype.highlight_cluster = function(membership, graph){
     // Builds a D3 network from graph data (in JSON form).

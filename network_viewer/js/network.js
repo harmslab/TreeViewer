@@ -11,7 +11,7 @@ var Network = function (svg, system) {
     this.height = this.svg.attr("height"); 
     this.charge = -100;
     this.link_distance = 100
-    this.color_on = true;
+    this.color_on = false;
     this.system = system;
     
     // Create an svg canvas for D3 plot
@@ -30,23 +30,25 @@ var Network = function (svg, system) {
 };
 
 
-Network.prototype.build_network = function(graph) {
+Network.prototype.build_network = function() {
     // Builds a D3 network from graph data (in JSON form).
     var graph_force = this.graph_force;
     
+    var system = this.system; 
+    
     graph_force
-        .nodes(graph.nodes)
-        .links(graph.links)
+        .nodes(system.nodes)
+        .links(system.links)
         .start();
     
     var graph_link = this.svg.selectAll(".graph_link")
-        .data(graph.links)
+        .data(system.links)
         .enter().append("line")
         .attr("class", "graph_link");
    
         
     var graph_node = this.svg.selectAll(".graph_node")
-        .data(graph.nodes)
+        .data(system.nodes)
         .enter().append("circle")
         .attr("class", "graph_node")
         .attr("r", 10)
@@ -72,6 +74,7 @@ Network.prototype.build_network = function(graph) {
     this.graph_force = graph_force;
     this.graph_link = graph_link;
     this.graph_node = graph_node;
+    this.system = system;
 };
 
 
