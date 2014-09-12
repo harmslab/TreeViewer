@@ -1,12 +1,10 @@
 .graph_node {
   stroke: #555;
-  fill: #777;
 }
 
 .graph_link {
   stroke: #999;
   stroke-opacity: .6;
-  stroke-width:2;
   fill:#000;
   opacity: 1;
   
@@ -21,7 +19,7 @@ path {
   stroke: #000;
   stroke-width:0;
   fill: #fff;
-  fill-opacity: 1;
+  fill-opacity: .4;
 }
 
 .cluster_link {
