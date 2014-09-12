@@ -317,7 +317,7 @@ Network.prototype.cluster_network2 = function(membership, graph, cluster){
     function graph_tick(e) {
 
       // Push different nodes in different directions for clustering.
-      var k = 1.3 * e.alpha;
+      var k = 0.7 * e.alpha;
       
       graph.nodes.forEach(function(o, i) {
         var member = membership[i]
@@ -367,4 +367,88 @@ Network.prototype.cluster_network2 = function(membership, graph, cluster){
     this.graph_force = graph_force;
     this.cluster_force = cluster.force;
     
+};
+
+Network.prototype.highlight_cluster = function(membership, graph){
+    // Builds a D3 network from graph data (in JSON form).
+    var graph_force = this.graph_force;
+
+    graph_force
+        .nodes(graph.nodes)
+        .links(graph.links)
+        .start();
+
+        var test = 1;
+    
+    
+    var graph_link = this.svg.selectAll(".graph_link")
+        .data(graph.links)
+        .enter().append("line")
+        .attr("class", "graph_link")
+        .style("stroke", function(d) {
+            var member0 = membership[d.target.name];
+            var member1 = membership[d.source.name]
+            if (member0 == test && member1 == test) {
+                return "#000";
+            } else {
+                return "#999";
+            }
+        })
+        .style("opacity", function(d) {
+            var member0 = membership[d.target.name];
+            var member1 = membership[d.source.name]
+            if (member0 == test && member1 == test) {
+                return 1;
+            } else {
+                return .4;
+            }
+        })
+        .style("stroke_width", 10);         // Change width later
+
+    
+    var graph_node = this.svg.selectAll(".graph_node")
+        .data(graph.nodes)
+        .enter().append("circle")
+        .attr("class", "graph_node")
+        .attr("r", 10)
+        .attr("cx", function(d) {return d.x;})
+        .attr("cy", function(d) {return d.y;})
+        .style("fill", function(d) {
+            var member = membership[d.name];
+            if (member == test) {
+                return "#ff0000";
+            } else {
+                return "#000";
+            }
+        })
+        .style("opacity", function(d) {
+            var member = membership[d.name];
+            if (member == test) {
+                return 1;
+            } else {
+                return .4;
+            }
+        })
+        .call(graph_force.drag);    
+
+
+    graph_force.on("tick", function () {
+    
+        graph_node   
+            .attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; });
+        
+        graph_link 
+            .attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+    
+    });
+
+    this.graph_force = graph_force;
+    this.graph_link = graph_link;
+    this.graph_node = graph_node;
+
+
 };
