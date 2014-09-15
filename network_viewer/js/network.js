@@ -11,7 +11,7 @@ var Network = function (svg, system) {
     this.height = this.svg.attr("height"); 
     this.charge = -100;
     this.link_distance = 100
-    this.color_on = false;
+    this.color_on = true;
     this.system = system;
     
     // Create an svg canvas for D3 plot
@@ -80,8 +80,8 @@ Network.prototype.build_network = function() {
 
 Network.prototype.color_network = function() {
     // Builds a D3 network from graph data (in JSON form).
-    var colors = d3.interpolate('green', 'blue');
+    var colors = d3.interpolate('orange', 'purple');
     
     this.graph_node
-        .attr("fill", function(d){ return colors(d.value)});
+        .attr("fill", function(d){ return colors(d.value*70)});
 };
