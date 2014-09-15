@@ -11,6 +11,7 @@ var Clustering = function(svg, membership, network, clusters) {
     this.cluster_scale = 300;
     this.membership = membership;
     this.transition_time = 2000;
+    this.highlight = true;
 
     this.cluster_force = d3.layout.force()
         .charge(-60)
@@ -30,6 +31,18 @@ var Clustering = function(svg, membership, network, clusters) {
     this.cluster_force.nodes(clusters.nodes)
         .links(clusters.links).start();
         
+    if (this.highlight == true) {
+        var that = this;
+        that.un_highlight_cluster();
+        $(".graph_node").mouseover(function(d){
+            var node = $(this).attr("id");
+            var cluster_number = that.membership[node]
+            that.highlight_cluster(cluster_number);
+        });
+        $(".graph_node").mouseout(function(d){
+            that.un_highlight_cluster();
+        });
+    };
     
 };
 
@@ -253,7 +266,6 @@ Clustering.prototype.highlight_cluster = function(cluster_number){
             }
         })
     
-
     
     graph_node
         .style("fill", function(d) {
@@ -279,7 +291,32 @@ Clustering.prototype.highlight_cluster = function(cluster_number){
 };
 
 
-Clustering.prototype.highlight_clusters = function(cluster_number){
+Clustering.prototype.un_highlight_cluster = function(cluster_number){
+    
+    var network = this.network;
+    var system = this.system;
+    var membership = this.membership;
+    
+    var graph_node = this.network.graph_node;
+    var graph_link = this.network.graph_link;
+    
+    
+    graph_link
+        .style("stroke", "#999")
+        .style("opacity", .4)
+        .style("stroke-width", 2);
+    
+    graph_node
+        .style("fill", "#000")
+        .style("opacity", .4);
+
+    this.network.graph_link = graph_link;
+    this.network.graph_node = graph_node;
+};
+
+
+
+Clustering.prototype.highlight_clusters = function(){
     
     var network = this.network;
     var system = this.system;

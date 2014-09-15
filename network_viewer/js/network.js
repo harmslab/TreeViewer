@@ -51,6 +51,7 @@ Network.prototype.build_network = function() {
         .data(system.nodes)
         .enter().append("circle")
         .attr("class", "graph_node")
+        .attr("id", function(d) {return d.index})
         .attr("r", 10)
         .attr("cx", function(d) {return d.x;})
         .attr("cy", function(d) {return d.y;})
