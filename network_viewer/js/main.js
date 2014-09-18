@@ -22,17 +22,8 @@ var main = function () {
     this.membership = 
 {0: 0, 1: 0, 2: 4, 3: 3, 4: 4, 5: 5, 6: 5, 7: 4, 8: 2, 9: 4, 10: 3, 11: 0, 12: 0, 13: 1, 14: 3, 15: 4, 16: 5, 17: 5, 18: 4, 19: 4, 20: 4, 21: 4, 22: 4, 23: 2, 24: 1, 25: 5, 26: 5, 27: 5, 28: 5, 29: 5, 30: 1, 31: 0, 32: 0, 33: 3, 34: 1, 35: 4, 36: 4, 37: 4, 38: 4, 39: 2, 40: 5, 41: 5, 42: 3, 43: 4, 44: 5, 45: 5, 46: 5, 47: 5, 48: 0, 49: 0, 50: 0, 51: 5, 52: 1, 53: 0, 54: 2, 55: 4, 56: 4, 57: 4, 58: 4, 59: 0, 60: 0, 61: 0, 62: 4, 63: 1, 64: 0, 65: 0, 66: 0, 67: 1, 68: 4, 69: 3, 70: 4, 71: 3, 72: 4, 73: 4, 74: 3, 75: 0, 76: 0, 77: 0, 78: 5, 79: 5, 80: 1, 81: 5, 82: 0, 83: 0, 84: 2, 85: 2, 86: 0, 87: 3, 88: 5, 89: 5, 90: 1, 91: 5, 92: 4, 93: 4, 94: 4, 95: 3, 96: 5, 97: 5, 98: 5, 99: 1, 100: 1, 101: 0, 102: 1, 103: 4, 104: 2, 105: 0, 106: 5, 107: 2, 108: 3, 109: 4, 110: 5, 111: 1, 112: 2, 113: 5, 114: 4, 115: 3, 116: 0, 117: 1, 118: 4, 119: 4, 120: 5, 121: 5, 122: 3, 123: 0, 124: 0, 125: 0, 126: 4, 127: 4};
 
-
-    
-    //this.network_viewer.build_network(this.network)
-    //this.network_viewer.cluster_network2(this.membership,this.network, this.cluster);
     this.network_viewer = new Network(this.svg, this.network);
     this.clustering = new Clustering(this.svg, this.membership, this.network_viewer, this.cluster);
-    
-    //this.network_viewer.color_network(this.network);
-    //this.clustering.highlight_cluster(0);
-    //this.clustering.highlight_clusters(1);
-    //this.clustering.highlight_clusters(2);
     
     
     var network_viewer = this.network_viewer;

@@ -30,7 +30,9 @@ var Clustering = function(svg, membership, network, clusters) {
     // Attach nodes and links to cluster force
     this.cluster_force.nodes(clusters.nodes)
         .links(clusters.links).start();
-        
+    
+    
+        //Highlight cluster in network if mouse hovers node.
     if (this.highlight == true) {
         var that = this;
         that.un_highlight_cluster();
