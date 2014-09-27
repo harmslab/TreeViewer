@@ -1,3 +1,5 @@
+// Copyright (c) Harms Lab
+// University of Oregon
 // TreeViewer Interactive Edition
 // Authors: Zach Sailer
 //          Jaclyn Smith
@@ -101,3 +103,48 @@ TreeViewer.prototype.init_tree = function(root) {
     this.text = text;
 
 }
+
+// unused functions to use
+
+TreeViewer.prototype.create_clade = function(node) {
+    // Build a polygon triangle that represents a clade
+    var clade = new Object();
+    
+    clade.area = node.size;//node.size
+    clade.x = 0;//node.x;
+    clade.y = 0;//node.y;
+    clade.width = 100;
+    clade.height = clade.area/(clade.width);
+    clade.v1 = String([clade.x,clade.y]);
+    clade.v2 = String([clade.x+clade.width, clade.y + clade.height/2]);
+    clade.v3 = String([clade.x+clade.width, clade.y - clade.height/2]);
+    clade.points = clade.v1 + " " + clade.v2 + " " + clade.v3
+    
+    return clade;
+};
+
+TreeViewer.prototype.node_representation = function(node_selector) {
+    // Node representations
+    
+    // Dots represent nodes
+    node_selector.append("circle")
+        .attr("r", 3.5);
+    
+    // If the node has a size associated with it, a clade will appear
+    node_selector.append("polygon").attr("points", function(d) {
+        if ('size' in d) {
+            
+            var area = d.size;//node.size
+            var width = 50;
+            var height = area/(width);
+            var v1 = "0,0";
+            var v2 = String([width, height/2]);
+            var v3 = String([width, -height/2]);
+            var points = v1 + " " + v2 + " " + v3;
+            return points;
+        } else {
+            return "0,0 0,0 0,0";
+        };
+    });
+};
+
