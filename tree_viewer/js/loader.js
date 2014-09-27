@@ -27,8 +27,11 @@ var LoaderWidget = function(selector, newick) {
                 $("<button>").addClass("btn btn-primary")
                     .attr("id", "load-button")
                     .text("Load")
-        );  
-    
+        ).append(
+                $("<div>").addClass("btn-group")
+                    .attr("data-toggle", "buttons")    
+        );
+
     this.load_button = "#load-button";
     this.load_form = "loader-data";
 };
