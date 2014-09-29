@@ -26,10 +26,8 @@ var LoaderWidget = function(selector, newick) {
         .append(
                 $("<button>").addClass("btn btn-primary")
                     .attr("id", "load-button")
+                    .css("float", "left")
                     .text("Load")
-        ).append(
-                $("<div>").addClass("btn-group")
-                    .attr("data-toggle", "buttons")    
         );
 
     this.load_button = "#load-button";

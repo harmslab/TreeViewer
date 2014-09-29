@@ -136,8 +136,8 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         .attr("x", function (d) { return d.x; })
         .attr("y", function (d) { return d.y; })
         .attr("class", function(d) { return "node " + d.type; })
-        //.call(drag);
-        .call(this.force.drag);
+        .call(drag);
+        //.call(this.force.drag);
 
     var text = this.svg.append("g").selectAll("text")
         .data(this.force.nodes())
@@ -182,11 +182,10 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         d.x += d3.event.dx;
         d.y += d3.event.dy; 
         //d3.select(this).attr('transform', 'translate(' + d.x + ',' + d.y + ')');
-        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
-    }
+        tick(); 
 
     function dragend(d, i) {
-        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        d.fixed = true; 
         tick();
         this.force.resume();
     }
