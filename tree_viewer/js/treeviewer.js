@@ -117,6 +117,8 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         .links(links)
         .start();
 
+    var force = this.force;
+
     // bugs in drag
 
     var drag = d3.behavior.drag()
@@ -130,7 +132,7 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         .attr("class", function(d) { return "link " + d.type; });
 
     var node = this.svg.selectAll(".node")
-        .data(this.force.nodes())
+        .data(force.nodes())
         .enter().append("circle")
         .attr("r", 6)
         .attr("x", function (d) { return d.x; })
@@ -140,7 +142,7 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         //.call(this.force.drag);
 
     var text = this.svg.append("g").selectAll("text")
-        .data(this.force.nodes())
+        .data(force.nodes())
         .enter().append("text")
         .attr("dx", 8)
         .attr("dy", ".31em")
@@ -151,7 +153,7 @@ TreeViewer.prototype.dynamic_tree = function(root) {
           }
       });
 
-    this.force.on("tick", tick);
+    force.on("tick", tick);
 
     // in scope functions for drag functionality
 
@@ -173,7 +175,7 @@ TreeViewer.prototype.dynamic_tree = function(root) {
     }
 
     function dragstart(d, i) {
-        this.force.stop() // stops the force auto positioning before you start dragging
+        force.stop() // stops the force auto positioning before you start dragging
     }
 
     function dragmove(d, i) {
@@ -183,13 +185,15 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         d.y += d3.event.dy; 
         //d3.select(this).attr('transform', 'translate(' + d.x + ',' + d.y + ')');
         tick(); 
+    }
 
     function dragend(d, i) {
         d.fixed = true; 
         tick();
-        this.force.resume();
+        force.resume();
     }
 
+    this.force = force;
     this.drag = drag;
     this.nodes = nodes;
     this.links = links;
