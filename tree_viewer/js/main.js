@@ -13,7 +13,8 @@ var main = function () {
     $(this.loader.load_button).on("click", this, function ( event ) {
         var that = event.data
         that.data = that.loader.on_click(that.loader)
-        that.treeviewer.update_tree(that.data)
+        //that.treeviewer.static_tree(that.data)
+        that.treeviewer.dynamic_tree(that.data)
      });
 };
 
