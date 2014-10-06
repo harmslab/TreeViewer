@@ -8,7 +8,8 @@ var LoaderWidget = function(selector, newick) {
     this.width = parseInt($(this.selector).css("width"));
     
     // Build widget window
-    this.loader_window = $("<div>").addClass("panel panel-default")
+    this.loader_window = $("<div></div>")
+                            .addClass("panel panel-default")
                             .attr("id", "loader-widget")
                             .attr('width', this.width)
                             .append("<div class='panel-heading'>")
@@ -17,19 +18,19 @@ var LoaderWidget = function(selector, newick) {
     $(this.selector).append(this.loader_window);                               
     
     // Build the form
-    $("#loader-body")
-        .append(
-                $("<textarea>").addClass("form-control")
+    $("#loader-body").append(
+                $("<textarea></textarea>")
+                    .addClass("form-control")
                     .attr("id", "loader-data")
                     .attr("rows", 4)
-        )
-        .append(
-                $("<button>").addClass("btn btn-primary")
+        ).append(
+                $("<button></button>")
+                    .addClass("btn btn-primary")
                     .attr("id", "load-button")
                     .css("float", "left")
                     .text("Load")
         );
-
+        
     this.load_button = "#load-button";
     this.load_form = "loader-data";
 };
@@ -37,7 +38,6 @@ var LoaderWidget = function(selector, newick) {
 LoaderWidget.prototype.toJSON = function(newick) {
     // Convert newick string to JSON for loading into D3
     var tree = Newick.parse(newick);
-    console.log(tree);
     return tree;
 };
 
