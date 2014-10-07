@@ -1,5 +1,6 @@
 var Modal = function(id) {
-
+    // Generic Modal for pop up menus.
+    
     this.id = id;
     
     // Build Modal header

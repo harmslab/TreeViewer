@@ -4,7 +4,7 @@
 // Authors: Zach Sailer
 //          Jaclyn Smith
 
-var TreeViewer = function (selector) {
+var TreeViewer = function (selector, data) {
     // version 2 of the phylogenetic tree viewer - interactive
     // creates the basic structure for a viewer below load box
     var that = this;
@@ -14,6 +14,9 @@ var TreeViewer = function (selector) {
     this.charge = -300;
     this.link_distance = 60;
     this.gravity = .1
+    this.tree_viewer = null;
+    this.representation = "dynamic";
+    this.data = data || null;
 
     this.cluster = d3.layout.cluster()
         .size([this.height, this.width-200]);
@@ -35,11 +38,14 @@ var TreeViewer = function (selector) {
         .append("g")
         .attr("transform", "translate(40,0)");
 
-    if (this.data == null) {
-    } else {
-        this.data = data
+    if (this.data != null) {
+        console.log(this.data) 
+        if (this.representation == "dynamic") {
+            this.tree_viewer = this.dynamic_tree(this.data);
+        } else {
+            this.tree_viewer = this.static_tree(this.data);
+        };
     };
-
 }
 
 TreeViewer.prototype.create_links = function(nodes) {
@@ -102,7 +108,7 @@ TreeViewer.prototype.static_tree = function(root) {
                 }
             });
             
-            this.node_representation(this.node);
+    this.node_representation(this.node);
 };
 
 TreeViewer.prototype.dynamic_tree = function(root) {
