@@ -1,22 +1,81 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head> 
 
-<head>
-    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TreeViewer</title>
+    <meta name="description" content="Dynamic phylogenetic tree viewer" />
+
     <link href="components/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="tree_viewer/css/link.css">
-</head>
+    <link rel="stylesheet" type="text/css" href="junk2.css">
+    
+</head> 
 
 <body>
-    
-    <div class="container" id="main_page">
-        
-        <!-- Page header for the webpage -->
-        <div class="page-header"><h1>TreeViewer <small>Interactive Phylogenetic Tree Viewer</small></h1></div>
-        
-        <!-- The choice of application is displayed here. -->
-        <div class="container" id="app_container"></div>
-    
+
+    <!-- Basic page Container -->
+    <div class="container main-container" id="main_page">
+
+        <!-- static top banner -->
+        <div class="row">
+            <div class="col-xs-12 main-header"><h2>TreeViewer</h2></div>
+        </div> 
+
+        <!-- menu bar -->
+        <div id="menu_row" class="row main-menu">
+            <div class="btn-group">
+
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="menu_button1">
+                    Menu1 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="menu_button2">
+                    Menu2 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+            </div> 
+                    
+            <div class="btn-group">
+                <button id="apply_nav_btn" class="btn btn-warning">Standalone</button>
+            </div>
+        </div>
+
+        <!-- div where interesting stuff happens  -->
+        <div class="row col-vertical-wrap main-window"> 
+
+            <!-- options bar -->
+            <div id="options_container" class="well col-xs-12 col-sm-2 col-vertical main-window-options">
+                <h4>Options bar</h4>
+                <p>option 1</p><br/><p>option 2</p>
+            </div>
+
+            <!-- main window -->
+            <div id="app_container" class="well col-xs-12 col-sm-10 col-vertical main-window-viewer"></div>
+
+        </div>
+
+        <!-- footer row -->
+        <div id="footer_row" class="row align-right main-footer">
+            <div class="col-xs-12"><a href="https://github.com/harmslab">harmslab</a><br></div>
+        </div>
+
     </div>
 
     <!-- Scripts that are loaded into the main webpage. -->    
@@ -30,7 +89,6 @@
     <script src="tree_viewer/js/treeviewer.js"></script>
     <script src="tree_viewer/js/loader.js"></script>
     <script src="tree_viewer/js/main.js"></script>
-
+    
 </body>
-
 </html>

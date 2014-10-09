@@ -1,10 +1,13 @@
 var main = function () {
     // Main function for the tree viewer
-    $('#app_container').append('<div>').attr('id', 'tree_viewer');
-    
+    $('#app_container').append('<div>').attr('id','tree_viewer');
+
     this.selector = $('#tree_viewer');
     this.data = null;
-    
+
+    $('#options_container').append('<div>').attr('id','options_bar');
+    this.options_selector = $('#options_bar');
+
     this.newick_parser = Newick;
     this.loader = new LoaderWidget(this.selector[0]);
     this.tree_viewer = new TreeViewer(this.selector[0], this.data);
