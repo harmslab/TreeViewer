@@ -1,0 +1,3 @@
+[submodule "Viewer-components"]
+	path = Viewer-components
+	url = https://github.com/harmslab/Viewer-components.git
