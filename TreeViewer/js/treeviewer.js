@@ -17,6 +17,7 @@ var TreeViewer = function (selector, data) {
     this.tree_viewer = null;
     this.representation = "dynamic";
     this.data = data || null;
+    this.zoom = true;
 
     this.cluster = d3.layout.cluster()
         .size([this.height, this.width-200]);
@@ -39,12 +40,15 @@ var TreeViewer = function (selector, data) {
         .attr("transform", "translate(40,0)");
 
     if (this.data != null) {
-        console.log(this.data) 
         if (this.representation == "dynamic") {
             this.tree_viewer = this.dynamic_tree(this.data);
         } else {
             this.tree_viewer = this.static_tree(this.data);
         };
+    };
+    
+    if (this.zoom == true) {
+        this.tree_zoom()
     };
 }
 
@@ -253,3 +257,11 @@ TreeViewer.prototype.node_representation = function(node_selector) {
     });
 };
 
+TreeViewer.prototype.tree_zoom = function(){
+    var svg = this.svg;
+    svg.call(d3.behavior.zoom().scaleExtent([.5, 2.5]).on("zoom", zoom))
+    
+    function zoom(){
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    };   
+};
