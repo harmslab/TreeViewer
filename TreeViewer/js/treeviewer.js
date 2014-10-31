@@ -17,7 +17,7 @@ var TreeViewer = function (selector, data) {
     this.tree_viewer = null;
     this.representation = "dynamic";
     this.data = data || null;
-    this.zoom = true;
+    this.zoom_on = true;
 
     this.cluster = d3.layout.cluster()
         .size([this.height, this.width-200]);
@@ -34,10 +34,15 @@ var TreeViewer = function (selector, data) {
 
     // create SVG canvas for vizualization 
     this.svg = d3.select(this.selector).append("svg")
+    .attr("id", "blah")
         .attr("width", this.width)
         .attr("height", this.height)
         .append("g")
         .attr("transform", "translate(40,0)");
+
+    if (this.zoom_on == true) {
+        this.tree_zoom()
+    };
 
     if (this.data != null) {
         if (this.representation == "dynamic") {
@@ -47,9 +52,7 @@ var TreeViewer = function (selector, data) {
         };
     };
     
-    if (this.zoom == true) {
-        this.tree_zoom()
-    };
+
 }
 
 TreeViewer.prototype.create_links = function(nodes) {
@@ -112,7 +115,7 @@ TreeViewer.prototype.static_tree = function(root) {
                 }
             });
             
-    this.node_representation(this.node);
+    //this.node_representation(this.node);
 };
 
 TreeViewer.prototype.dynamic_tree = function(root) {
@@ -259,9 +262,21 @@ TreeViewer.prototype.node_representation = function(node_selector) {
 
 TreeViewer.prototype.tree_zoom = function(){
     var svg = this.svg;
-    svg.call(d3.behavior.zoom().scaleExtent([.5, 2.5]).on("zoom", zoom))
     
-    function zoom(){
-        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    };   
+    var zoom = d3.behavior.zoom()
+                .scaleExtent([.5, 2.5])
+                .on("zoom", zoom_behavior);
+        
+    svg.call(zoom)
+    
+    function zoom_behavior(){
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+        d3.event.stopPropagation();
+    };
+    
+    this.svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", this.width)
+        .attr("height", this.height);
+    
 };
