@@ -29,7 +29,6 @@ var Options = function(selector, tree_viewer) {
     
     $("#options_apply").on("click", function(){
         that.representation(that.val);
-        console.log(that.tree_viewer.svg );  
     });
 };
 
