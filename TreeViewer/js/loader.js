@@ -13,7 +13,8 @@ var LoaderWidget = function(selector, newick) {
                             .attr("id", "loader-widget")
                             .attr('width', this.width)
                             .append("<div class='panel-heading'>")
-                            .append("<div class='panel-body' id='loader-body'>");
+                            .append("<div class='panel-body' id='loader-body'>")
+                            .draggable();
     
     $(this.selector).append(this.loader_window);                               
     

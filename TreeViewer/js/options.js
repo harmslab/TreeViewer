@@ -29,6 +29,8 @@ var Options = function(selector, tree_viewer) {
     
     $("#options_apply").on("click", function(){
         that.representation(that.val);
+        tree_map = new TreeMap(tree_viewer);
+        
     });
 };
 

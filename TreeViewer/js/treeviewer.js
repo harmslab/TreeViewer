@@ -37,7 +37,9 @@ var TreeViewer = function (selector, data) {
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
+        .attr("id", "zachary")
         .append("g");
+    
     // handle zoom
     if (this.zoom_on == true) {
         this.tree_zoom()
