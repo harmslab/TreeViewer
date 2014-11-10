@@ -13,7 +13,7 @@ var main = function () {
     $(this.loader.load_button).on("click", this, function ( event ) {
         var that = event.data
         that.data = that.loader.on_click(that.loader)
-        that.tree_viewer.data = that.data;
+        that.tree_viewer.data = that.data;        
      });
 };
 

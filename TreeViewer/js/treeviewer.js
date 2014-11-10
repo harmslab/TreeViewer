@@ -17,6 +17,8 @@ var TreeViewer = function (selector, data) {
     this.tree_viewer = null;
     this.representation = "dynamic";
     this.data = data || null;
+    this.zoom_on = true;
+    this.tree_window = null;
 
     this.cluster = d3.layout.cluster()
         .size([this.height, this.width-200]);
@@ -35,11 +37,16 @@ var TreeViewer = function (selector, data) {
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
-        .append("g")
-        .attr("transform", "translate(40,0)");
-
+        .append("g");
+    // handle zoom
+    if (this.zoom_on == true) {
+        this.tree_zoom()
+        this.tree_window = this.zoom_window;
+    } else {
+        this.tree_window = this.svg; 
+    };
+    
     if (this.data != null) {
-        console.log(this.data) 
         if (this.representation == "dynamic") {
             this.tree_viewer = this.dynamic_tree(this.data);
         } else {
@@ -63,10 +70,10 @@ TreeViewer.prototype.static_tree = function(root) {
     this.links = this.create_links(this.nodes);
       
     // Attach this new data to links and nodes.  
-    this.link = this.svg.selectAll(".link")
+    this.link = this.tree_window.selectAll(".link")
                 .data(this.links, function(d) { return d.id; });
                 
-    this.node = this.svg.selectAll(".node")
+    this.node = this.tree_window.selectAll(".node")
                 .data(this.nodes, function(d) { return d.name; });
         
     // Update the links and nodes that still exists    
@@ -107,14 +114,13 @@ TreeViewer.prototype.static_tree = function(root) {
                     return d.name;
                 }
             });
-            
-    this.node_representation(this.node);
+
+    //this.node_representation(this.node);
 };
 
 TreeViewer.prototype.dynamic_tree = function(root) {
     
     // root contains data
-    
     var nodes = this.cluster.nodes(root);
     var links = this.create_links(nodes);
 
@@ -126,18 +132,17 @@ TreeViewer.prototype.dynamic_tree = function(root) {
     var force = this.force;
 
     // bugs in drag
-
     var drag = d3.behavior.drag()
         .on("dragstart", dragstart)
         .on("drag", dragmove)
         .on("dragend", dragend);
 
-    var link = this.svg.selectAll(".link")
+    var link = this.tree_window.selectAll(".link")
         .data(this.force.links())
         .enter().append("path")
         .attr("class", function(d) { return "link " + d.type; });
 
-    var node = this.svg.selectAll(".node")
+    var node = this.tree_window.selectAll(".node")
         .data(force.nodes())
         .enter().append("circle")
         .attr("r", 6)
@@ -147,7 +152,7 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         .call(drag);
         //.call(this.force.drag);
 
-    var text = this.svg.append("g").selectAll("text")
+    var text = this.tree_window.append("g").selectAll("text")
         .data(force.nodes())
         .enter().append("text")
         .attr("dx", 8)
@@ -181,7 +186,10 @@ TreeViewer.prototype.dynamic_tree = function(root) {
     }
 
     function dragstart(d, i) {
-        force.stop() // stops the force auto positioning before you start dragging
+        // stops the force auto positioning before you start dragging
+        force.stop() 
+        // Allows node dragging without dragging the whole tree
+        d3.event.sourceEvent.stopPropagation()
     }
 
     function dragmove(d, i) {
@@ -253,3 +261,30 @@ TreeViewer.prototype.node_representation = function(node_selector) {
     });
 };
 
+TreeViewer.prototype.tree_zoom = function(){
+    
+    // Create group element for zooming
+    var zoom_window = this.svg.append("g")
+                .attr("id","zoom_window");
+    
+    // Initiate zooming
+    var zoom = d3.behavior.zoom()
+                .scaleExtent([.5, 2.5])
+                .on("zoom", zoom_behavior);
+
+    // Allow entire svg region to zoom
+    zoom_window
+        .append("rect")
+        .attr("class", "overlay")
+        .attr("width", this.width)
+        .attr("height", this.height);
+    
+    // Call zoom behavior on svg
+    this.svg.call(zoom)
+        
+    function zoom_behavior() {
+        zoom_window.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+    };
+    
+    this.zoom_window = zoom_window;
+};

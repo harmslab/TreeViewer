@@ -20,3 +20,8 @@ polygon {
     fill: none;
     stroke: #ccc;
 }
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
