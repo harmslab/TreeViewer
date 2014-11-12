@@ -17,7 +17,10 @@ var TreeViewer = function (selector, data) {
     this.tree_viewer = null;
     this.representation = "dynamic";
     this.data = data || null;
+    this.zoom = null;
     this.zoom_on = true;
+    this.zoom_scale = 1;
+    this.zoom_translate = [0,0];
     this.tree_window = null;
 
     this.cluster = d3.layout.cluster()
@@ -265,6 +268,9 @@ TreeViewer.prototype.node_representation = function(node_selector) {
 
 TreeViewer.prototype.tree_zoom = function(){
     
+    var zoom_scale = this.zoom_scale;
+    var zoom_translate = this.zoom_translate;
+    
     // Create group element for zooming
     var zoom_window = this.svg.append("g")
                 .attr("id","zoom_window");
@@ -285,8 +291,13 @@ TreeViewer.prototype.tree_zoom = function(){
     this.svg.call(zoom)
         
     function zoom_behavior() {
+        zoom_scale = d3.event.scale;
+        zoom_translate = d3.event.translate;
         zoom_window.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
     };
     
+    this.zoom = zoom;
     this.zoom_window = zoom_window;
+    this.zoom_scale = zoom_scale;
+    this.zoom_translate = zoom_translate;
 };

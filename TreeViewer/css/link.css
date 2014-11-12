@@ -25,3 +25,7 @@ polygon {
   fill: none;
   pointer-events: all;
 }
+
+.zoom_box {
+    fill-opacity: .3; 
+}
