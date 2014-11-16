@@ -10,7 +10,7 @@ var TreeViewer = function (selector, data) {
     var that = this;
     this.selector = selector;
     this.width = parseInt($(this.selector).css("width"));
-    this.height = 700;
+    this.height = 500;
     this.charge = -300;
     this.link_distance = 60;
     this.gravity = .1
@@ -34,13 +34,13 @@ var TreeViewer = function (selector, data) {
         .charge(this.charge)
         .linkDistance(this.link_distance)
         .gravity(this.gravity)
-        .size([this.height, this.width-200]);
+        .size([this.width, this.height]);
 
     // create SVG canvas for vizualization 
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
-        .attr("id", "zachary")
+        .attr("id", "tree_svg")
         .append("g");
     
     // handle zoom
@@ -76,10 +76,10 @@ TreeViewer.prototype.static_tree = function(root) {
       
     // Attach this new data to links and nodes.  
     this.link = this.tree_window.selectAll(".link")
-                .data(this.links, function(d) { return d.id; });
+        .data(this.links, function(d) { return d.id; });
                 
     this.node = this.tree_window.selectAll(".node")
-                .data(this.nodes, function(d) { return d.name; });
+        .data(this.nodes, function(d) { return d.name; });
         
     // Update the links and nodes that still exists    
     this.link.transition()
@@ -109,16 +109,16 @@ TreeViewer.prototype.static_tree = function(root) {
         .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
    this.node.append("text")
-            .attr("dx", function(d) { return d.children ? 6 : 6; })
-            .attr("dy", 0)
-            .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-            .text(function(d) { 
-                if (d.name.substring(0,5) == "split") {
-                    
-                } else {
-                    return d.name;
-                }
-            });
+        .attr("dx", function(d) { return d.children ? 6 : 6; })
+        .attr("dy", 0)
+        .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+        .text(function(d) { 
+            if (d.name.substring(0,5) == "split") {
+                
+            } else {
+                return d.name;
+            }
+        });
 
     //this.node_representation(this.node);
 };
@@ -163,11 +163,11 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         .attr("dx", 8)
         .attr("dy", ".31em")
         .text(function(d) { 
-          if (d.name.substring(0,5) == "split") {
-          } else {
-              return d.name;
-          }
-      });
+            if (d.name.substring(0,5) == "split") {
+            } else {
+                return d.name;
+              }
+        });
 
     force.on("tick", tick);
 
@@ -277,7 +277,7 @@ TreeViewer.prototype.tree_zoom = function(){
     
     // Initiate zooming
     var zoom = d3.behavior.zoom()
-                .scaleExtent([.5, 2.5])
+                .scaleExtent([1, 5])
                 .on("zoom", zoom_behavior);
 
     // Allow entire svg region to zoom

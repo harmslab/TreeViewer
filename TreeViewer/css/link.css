@@ -1,3 +1,16 @@
+/*
+Webpage CSS
+*/
+#main_page {
+    position:relative;
+}
+
+#map_window {
+}
+
+/*
+TreeViewer CSS stylesheets
+*/
 .link {
 	fill: none;
 	stroke: #666;
@@ -21,9 +34,23 @@ polygon {
     stroke: #ccc;
 }
 
+#tree_svg {
+    position:relative;
+}
+
+/*
+CSS classes that handle zooming
+*/
 .overlay {
   fill: none;
   pointer-events: all;
+}
+
+/* 
+TreeMap CSS classes
+*/
+#map_window {
+    position:absolute;
 }
 
 .zoom_box {
