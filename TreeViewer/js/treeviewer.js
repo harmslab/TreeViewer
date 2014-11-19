@@ -21,6 +21,7 @@ var TreeViewer = function (selector, data) {
     this.zoom_on = true;
     this.zoom_scale = 1;
     this.zoom_translate = [0,0];
+    this.zoom_offset = [0,0];
     this.tree_window = null;
 
     this.cluster = d3.layout.cluster()
@@ -251,7 +252,6 @@ TreeViewer.prototype.node_representation = function(node_selector) {
     // If the node has a size associated with it, a clade will appear
     node_selector.append("polygon").attr("points", function(d) {
         if ('size' in d) {
-            
             var area = d.size;//node.size
             var width = 50;
             var height = area/(width);
@@ -268,17 +268,18 @@ TreeViewer.prototype.node_representation = function(node_selector) {
 
 TreeViewer.prototype.tree_zoom = function(){
     
-    var zoom_scale = this.zoom_scale;
-    var zoom_translate = this.zoom_translate;
+    var that = this;
+    var zoom_scale = that.zoom_scale;
+    var zoom_translate = that.zoom_translate;
     
     // Create group element for zooming
     var zoom_window = this.svg.append("g")
-                .attr("id","zoom_window");
+        .attr("id","zoom_window");
     
     // Initiate zooming
     var zoom = d3.behavior.zoom()
-                .scaleExtent([1, 5])
-                .on("zoom", zoom_behavior);
+        .scaleExtent([1, 5])
+        .on("zoom", zoom_behavior);
 
     // Allow entire svg region to zoom
     zoom_window
@@ -289,15 +290,16 @@ TreeViewer.prototype.tree_zoom = function(){
     
     // Call zoom behavior on svg
     this.svg.call(zoom)
-        
+    
     function zoom_behavior() {
-        zoom_scale = d3.event.scale;
-        zoom_translate = d3.event.translate;
-        zoom_window.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+        var translate = d3.event.translate;
+        var scale = d3.event.scale; 
+        zoom_window.attr("transform", "translate(" + translate + ") scale(" + scale + ")")
+        that.zoom_scale = scale;
+        that.zoom_translate = translate;
     };
     
     this.zoom = zoom;
     this.zoom_window = zoom_window;
-    this.zoom_scale = zoom_scale;
-    this.zoom_translate = zoom_translate;
+
 };

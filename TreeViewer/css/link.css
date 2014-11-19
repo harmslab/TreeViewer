@@ -5,7 +5,8 @@ Webpage CSS
     position:relative;
 }
 
-#map_window {
+.map-panel {
+    padding:10px 10px 10px 10px;
 }
 
 /*
