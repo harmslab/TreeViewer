@@ -120,6 +120,11 @@ TreeMap.prototype.generate_map = function() {
         $("#map_window").empty();
         that.clone_tree();
         that.create_zoom_box();
+        var scale = 1/that.tree_viewer.zoom_scale;
+        var one = -that.scale*scale*that.tree_viewer.zoom_translate[0];
+        var two = -that.scale*scale*that.tree_viewer.zoom_translate[1];
+        that.zoom_box
+            .attr("transform", "translate(" + [one,two] + ") scale(" + scale + ")")
         that.click_map();
     };
 };
@@ -147,8 +152,12 @@ TreeMap.prototype.click_map = function() {
         var translate = [x,y];
         that.tree_viewer.zoom_window.transition().duration(700)
             .attr("transform", "translate(" + translate + ") scale(" + scale + ")");
+            
+        // Update tree_viewer object and its zoom behavior    
         that.tree_viewer.zoom.scale(scale);
         that.tree_viewer.zoom.translate(translate);
+        that.tree_viewer.zoom_scale = scale;
+        that.tree_viewer.zoom_translate = translate
         
     };
     this.tree_viewer = that.tree_viewer;
