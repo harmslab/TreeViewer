@@ -69,7 +69,6 @@ var Modal = function(id) {
 
 Modal.prototype.dropdown = function (id, text, options) {
     
-    
     var button = $("<button>"+text+"</button>")
                 .addClass("btn btn-default dropdown-toggle")
                 .attr("type", "button")
@@ -79,7 +78,6 @@ Modal.prototype.dropdown = function (id, text, options) {
                     .addClass("caret")
                 );
                 
-    
     var option_list = $("<ul></ul>")
                 .addClass("dropdown-menu")
                 .attr("role", "menu")

@@ -10,14 +10,18 @@ var TreeViewer = function (selector, data) {
     var that = this;
     this.selector = selector;
     this.width = parseInt($(this.selector).css("width"));
-    this.height = 700;
+    this.height = 500;
     this.charge = -300;
     this.link_distance = 60;
     this.gravity = .1
     this.tree_viewer = null;
     this.representation = "dynamic";
     this.data = data || null;
+    this.zoom = null;
     this.zoom_on = true;
+    this.zoom_scale = 1;
+    this.zoom_translate = [0,0];
+    this.zoom_offset = [0,0];
     this.tree_window = null;
 
     this.cluster = d3.layout.cluster()
@@ -31,13 +35,15 @@ var TreeViewer = function (selector, data) {
         .charge(this.charge)
         .linkDistance(this.link_distance)
         .gravity(this.gravity)
-        .size([this.height, this.width-200]);
+        .size([this.width, this.height]);
 
     // create SVG canvas for vizualization 
     this.svg = d3.select(this.selector).append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
+        .attr("id", "tree_svg")
         .append("g");
+    
     // handle zoom
     if (this.zoom_on == true) {
         this.tree_zoom()
@@ -71,10 +77,10 @@ TreeViewer.prototype.static_tree = function(root) {
       
     // Attach this new data to links and nodes.  
     this.link = this.tree_window.selectAll(".link")
-                .data(this.links, function(d) { return d.id; });
+        .data(this.links, function(d) { return d.id; });
                 
     this.node = this.tree_window.selectAll(".node")
-                .data(this.nodes, function(d) { return d.name; });
+        .data(this.nodes, function(d) { return d.name; });
         
     // Update the links and nodes that still exists    
     this.link.transition()
@@ -104,16 +110,16 @@ TreeViewer.prototype.static_tree = function(root) {
         .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
    this.node.append("text")
-            .attr("dx", function(d) { return d.children ? 6 : 6; })
-            .attr("dy", 0)
-            .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-            .text(function(d) { 
-                if (d.name.substring(0,5) == "split") {
-                    
-                } else {
-                    return d.name;
-                }
-            });
+        .attr("dx", function(d) { return d.children ? 6 : 6; })
+        .attr("dy", 0)
+        .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+        .text(function(d) { 
+            if (d.name.substring(0,5) == "split") {
+                
+            } else {
+                return d.name;
+            }
+        });
 
     //this.node_representation(this.node);
 };
@@ -158,11 +164,11 @@ TreeViewer.prototype.dynamic_tree = function(root) {
         .attr("dx", 8)
         .attr("dy", ".31em")
         .text(function(d) { 
-          if (d.name.substring(0,5) == "split") {
-          } else {
-              return d.name;
-          }
-      });
+            if (d.name.substring(0,5) == "split") {
+            } else {
+                return d.name;
+              }
+        });
 
     force.on("tick", tick);
 
@@ -246,7 +252,6 @@ TreeViewer.prototype.node_representation = function(node_selector) {
     // If the node has a size associated with it, a clade will appear
     node_selector.append("polygon").attr("points", function(d) {
         if ('size' in d) {
-            
             var area = d.size;//node.size
             var width = 50;
             var height = area/(width);
@@ -263,14 +268,18 @@ TreeViewer.prototype.node_representation = function(node_selector) {
 
 TreeViewer.prototype.tree_zoom = function(){
     
+    var that = this;
+    var zoom_scale = that.zoom_scale;
+    var zoom_translate = that.zoom_translate;
+    
     // Create group element for zooming
     var zoom_window = this.svg.append("g")
-                .attr("id","zoom_window");
+        .attr("id","zoom_window");
     
     // Initiate zooming
     var zoom = d3.behavior.zoom()
-                .scaleExtent([.5, 2.5])
-                .on("zoom", zoom_behavior);
+        .scaleExtent([1, 5])
+        .on("zoom", zoom_behavior);
 
     // Allow entire svg region to zoom
     zoom_window
@@ -281,10 +290,16 @@ TreeViewer.prototype.tree_zoom = function(){
     
     // Call zoom behavior on svg
     this.svg.call(zoom)
-        
+    
     function zoom_behavior() {
-        zoom_window.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+        var translate = d3.event.translate;
+        var scale = d3.event.scale; 
+        zoom_window.attr("transform", "translate(" + translate + ") scale(" + scale + ")")
+        that.zoom_scale = scale;
+        that.zoom_translate = translate;
     };
     
+    this.zoom = zoom;
     this.zoom_window = zoom_window;
+
 };
