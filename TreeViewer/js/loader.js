@@ -1,10 +1,20 @@
-// Loads data from newick file
+/* 
+    Copyright (c) Harms Lab
+    University of Oregon
+    TreeViewer Interactive Edition
+    Authors:    Zach Sailer
+                Jaclyn Smith
+    
+    LoaderWidget object builds a panel for loading Newick strings into JSON
+    for rendering D3.
+
+*/
 
 var LoaderWidget = function() {
     
-    var that = this;
     this.newick = Newick;
     this.width = parseInt($(this.selector).css("width"));
+    this.data;
     
     this.data_form = $("<textarea></textarea>")
         .addClass("form-control")
@@ -17,6 +27,10 @@ var LoaderWidget = function() {
         .css("float", "left")
         .text("Load")
     
+    this.loader_header = $("<div></div>")
+        .addClass("panel-heading")
+        .text("Load Newick data for rendering in TreeViewer:")
+    
     this.loader_body = $("<div></div>")
         .addClass("panel-body")
         .attr("id", "loader-body")
@@ -28,26 +42,29 @@ var LoaderWidget = function() {
         .addClass("panel panel-default")
         .attr("id", "loader-widget")
         .attr('width', this.width)
-        .append("<div class='panel-heading'>")
+        .append(this.loader_header)
         .append(this.loader_body)
-        .draggable();    
+        .draggable();
+    
+    var that = this;
+    this.load_button.click(that,that.grab_data);
+        
 };
 
 LoaderWidget.prototype.toJSON = function(newick) {
     // Convert newick string to JSON for loading into D3
-    var tree = Newick.parse(newick);
-    return tree;
+    this.data = Newick.parse(newick);
 };
 
-LoaderWidget.prototype.on_click = function(loaderwidget) {
+LoaderWidget.prototype.grab_data = function(loaderwidget) {
     // Handle click from loader widget
-    var that = loaderwidget;
+    var that = loaderwidget.data;
     var text = $("#loader-data").val();
     // example newick for testing
     if (!text) {
         text = "(PITX1_Anole:0.24185,(((PITX2_Anole:0.06605,((PITX2_Human:0.0284,(PITX2_Chicken:0.0306,PITX2_Turtle:0.0306):0.0284):0.0421,(PITX2_Turkey:0.035,PITX2_Duck:0.035):0.0421):0.06605):0.0834,(PITX1_Turtle:0.0911,(PITX1_Chicken:0.0933,PITX1_Human:0.0933):0.0911):0.0834):0.1002,(PITX1_Duck:0.12535,PITX1_Turkey:0.12535):0.1002):0.24185)";
-        $("#loader-data").attr("placeholder", text);
+        that.data_form.attr("placeholder", text);
     }
-    return that.toJSON(text);
+    that.toJSON(text);    
 };
 

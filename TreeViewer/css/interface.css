@@ -1,45 +1,7 @@
-
-/* The col-vertical classes are a weirdo hack (like all, css, I guess?) to make
- * the columns take the entire height of the containing div. */
-.col-vertical{
-    margin-bottom: -99999px;
-    padding-bottom: 99999px;
-    background-color:#fff;
-}
-
-.col-vertical-wrap{  
-    overflow: hidden;   
-} 
-
-/* .main-xxx classes are the main interface to the treeviewer. */
-.main-container {
-    border-style:solid;
-    border-width:1px;
-    border-color:gray;
-    border-radius:5px;
-}
-
-.main-menu {
-    background-color: #5F8AC7;
-    padding: 5px;
-}
-
-.main-header {
-    text-align:right;
-    background-color:#F0F0F0;
-    border-radius:5px 5px 0px 0px;
-}
-
-.main-window {}
-.main-window-options { 
-    border-radius: 0px;
-    background-color:#F0F0F0;
-}
-
-.main-window-viewer {}
-
-.main-footer {
-    text-align:right;
-    background-color:#5F8AC7;
-    border-radius:0px 0px 5px 5px;
+/* Header css */
+.page-header {
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }

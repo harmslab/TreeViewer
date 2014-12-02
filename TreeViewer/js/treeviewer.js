@@ -1,8 +1,14 @@
-// Copyright (c) Harms Lab
-// University of Oregon
-// TreeViewer Interactive Edition
-// Authors: Zach Sailer
-//          Jaclyn Smith
+/* 
+    Copyright (c) Harms Lab
+    University of Oregon
+    TreeViewer Interactive Edition
+    Authors:    Zach Sailer
+                Jaclyn Smith
+
+    TreeViewer class contains the D3 representation of the evolutionary tree
+    loaded by the user. Any code that pertains the actual tree itself should be 
+    contained in this class.
+*/
 
 var TreeViewer = function (selector, data) {
     // version 2 of the phylogenetic tree viewer - interactive
@@ -10,7 +16,7 @@ var TreeViewer = function (selector, data) {
     var that = this;
     this.selector = selector;
     this.width = parseInt($(window).width());
-    this.height = parseInt($(window).height()-$(".page-header").height());
+    this.height = parseInt($(window).height()-$(".page-header").height()-30);
     this.charge = -300;
     this.link_distance = 60;
     this.gravity = .1

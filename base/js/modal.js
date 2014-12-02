@@ -21,7 +21,7 @@ var Modal = function(id) {
                     $("<span>Close</span>")
                         .addClass("sr-only")
                 );
-    this.title = $("<h4></h4>")
+    this.title = $("<h3></h3>")
                 .addClass("modal-title")
                 .attr("id", this.id+"_title");
         
@@ -38,13 +38,7 @@ var Modal = function(id) {
     // Build modal footer
     this.footer = $("<div></div>")
                 .addClass("modal-footer")
-                .attr("id", this.id+"_footer")
-                .append(
-                    $("<button>Apply</button>")
-                        .addClass("btn btn-default")
-                        .attr("data-dismiss","modal")
-                        .attr("id", this.id+"_apply")
-                );
+                .attr("id", this.id+"_footer");
 
     
     this.content = $("<div></div>")
@@ -95,7 +89,20 @@ Modal.prototype.hide_model = function(){
     this.window.modal("hide");
 };
 
-
+Modal.prototype.add_footer_button = function(text){
+    /**
+    * Add footer button for closing modal. Useful for applying
+    * features included in modal
+    **/
+    var footer_button = $("<button>"+text+"</button>")
+        .addClass("btn btn-default")
+        .attr("data-dismiss","modal")
+        .attr("id", this.id+"_" + text);
+    
+    this.footer.append(footer_button);
+    
+    return footer_button;
+};
 
 Modal.prototype.create_modal_toggle = function(text){
     /**
@@ -107,7 +114,7 @@ Modal.prototype.create_modal_toggle = function(text){
     *   text that will appear on window
     **/
     this.modal_toggle_button = $("<button></button>")
-                .addClass("btn btn-primary btn-lg")
+                .addClass("btn btn-default btn-lg")
                 .attr("data-toggle", "modal")
                 .attr("data-target", "#"+this.id+"_window")
                 .attr("id", this.id+"_toggle")
@@ -153,7 +160,7 @@ Modal.prototype.add_element_to_grid = function(element){
 };
 
 
-Modal.prototype.dropdown = function (id, title, options) {
+Modal.prototype.dropdown_menu = function (id, title, options) {
     /**
     * Adds a dropdown menu to the modal
     *
@@ -167,7 +174,7 @@ Modal.prototype.dropdown = function (id, title, options) {
     *   text for each option in the dropdwon
     **/
     
-    var button = $("<button>"+text+"</button>")
+    var button = $("<button>"+title+"</button>")
                 .addClass("btn btn-default dropdown-toggle")
                 .attr("type", "button")
                 .attr("data-toggle","dropdown")
@@ -181,25 +188,34 @@ Modal.prototype.dropdown = function (id, title, options) {
                 .addClass("dropdown-menu")
                 .attr("role", "menu")
                 .attr("aria-labelledby", id+"_button");
-     
-    for (i=0; i<options.length; i++) {
-        option_list.append($("<li></li>")
-                .attr("role", "presentation")
-                .append($("<a>"+options[i]+"</a>")
-                .attr("id", options[i]+"")
-                    .attr("role","menuitem")
-                    .attr("tabindex", "-1")
-                )
-        );
-    };
     
     var menu = $("<div></div>")
                 .addClass("dropdown")
                 .addClass("container")
                 .attr("id", id+"_dropdown")
-                .append(button, option_list);
+     
+    for (i=0; i<options.length; i++) {
+        var list_text = $("<a>"+options[i]+"</a>")
+            .attr("id", options[i]+"")
+            .attr("role","menuitem")
+            .attr("tabindex", "-1");
+
+        
+        var list_item = $("<li></li>")
+            .attr("role", "presentation")
+            .append(list_text)            
+            .click(options[i], function(event){
+                button.val(event.data);
+            });
+        
+        option_list.append(list_item);
+    };
+    
+    
+    menu.append(button, option_list);
            
     this.add_element_to_grid(menu);
+    return button
 };
 
 Modal.prototype.toggle_button = function(id, text) {
