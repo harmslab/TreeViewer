@@ -1,39 +1,36 @@
 // Loads data from newick file
 
-var LoaderWidget = function(selector) {
+var LoaderWidget = function() {
     
     var that = this;
-    this.selector = selector;
     this.newick = Newick;
     this.width = parseInt($(this.selector).css("width"));
     
+    this.data_form = $("<textarea></textarea>")
+        .addClass("form-control")
+        .attr("id", "loader-data")
+        .attr("rows", 4)
+    
+    this.load_button = $("<button></button>")
+        .addClass("btn btn-primary")
+        .attr("id", "load-button")
+        .css("float", "left")
+        .text("Load")
+    
+    this.loader_body = $("<div></div>")
+        .addClass("panel-body")
+        .attr("id", "loader-body")
+        .append(this.data_form)
+        .append(this.load_button);
+        
     // Build widget window
     this.loader_window = $("<div></div>")
         .addClass("panel panel-default")
         .attr("id", "loader-widget")
         .attr('width', this.width)
         .append("<div class='panel-heading'>")
-        .append("<div class='panel-body' id='loader-body'>")
-        .draggable();
-    
-    $(this.selector).append(this.loader_window);                               
-    
-    // Build the form
-    $("#loader-body").append(
-                $("<textarea></textarea>")
-                    .addClass("form-control")
-                    .attr("id", "loader-data")
-                    .attr("rows", 4)
-        ).append(
-                $("<button></button>")
-                    .addClass("btn btn-primary")
-                    .attr("id", "load-button")
-                    .css("float", "left")
-                    .text("Load")
-        );
-        
-    this.load_button = "#load-button";
-    this.load_form = "loader-data";
+        .append(this.loader_body)
+        .draggable();    
 };
 
 LoaderWidget.prototype.toJSON = function(newick) {

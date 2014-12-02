@@ -12,7 +12,7 @@ var Modal = function(id) {
 
     
     // Build Modal header
-    var close_button = $("<button></button>")
+    this.close_button = $("<button></button>")
                 .addClass("close")
                 .attr("data-dismiss", "modal")
                 .append(
@@ -20,14 +20,14 @@ var Modal = function(id) {
                         .attr("aria-hidden", "true"),
                     $("<span>Close</span>")
                         .addClass("sr-only")
-                ),
-        title = $("<h4></h4>")
+                );
+    this.title = $("<h4></h4>")
                 .addClass("modal-title")
                 .attr("id", this.id+"_title");
         
     this.header = $("<div></div>")
                 .addClass("modal-header")
-                .append(close_button, title);
+                .append(this.close_button, this.title);
                 
     
     // Build modal body
@@ -78,7 +78,7 @@ Modal.prototype.add_modal_title = function(title){
     /**
     * Add a title to the modal window
     **/
-    $("#"+this.id+"_title").text(title);
+    this.title.text(title);
 };
 
 Modal.prototype.show_modal = function(){
@@ -116,6 +116,12 @@ Modal.prototype.create_modal_toggle = function(text){
     return this.modal_toggle_button;
 };
 
+Modal.prototype.add_element = function(element){
+    /**
+    * Add element to modal
+    **/
+    $("#"+this.id+"_body").append(element);
+};
 
 Modal.prototype.add_element_to_grid = function(element){
     /**

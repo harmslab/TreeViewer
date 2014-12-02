@@ -9,8 +9,9 @@ var ViewerOptions = function(selector, tree_viewer) {
     
     this.modal.append_to_element("#"+this.selector_id)
     
-    // Element for loading data
-    this.loader = new LoaderWidget(this.element_id);
+    // Loading Newick Data element
+    this.loader = new LoaderWidget();
+    this.modal.add_element(this.loader.loader_window);
     
 };
 
