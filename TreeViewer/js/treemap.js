@@ -11,7 +11,9 @@ var TreeMap = function (tree_viewer) {
     //this.height = this.tree_viewer.height;
     //this.width = this.tree_viewer.width;
     this.map_window("#tree_viewer");
-    this.generate_map();
+    
+    // MAKE SURE YOU RUN THIS SOMEWHERE TO SHOW MAP
+    //this.generate_map();
     
 };
 

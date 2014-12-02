@@ -9,8 +9,8 @@ var TreeViewer = function (selector, data) {
     // creates the basic structure for a viewer below load box
     var that = this;
     this.selector = selector;
-    this.width = parseInt($(this.selector).css("width"));
-    this.height = 500;
+    this.width = parseInt($(window).width());
+    this.height = parseInt($(window).height()-$(".page-header").height());
     this.charge = -300;
     this.link_distance = 60;
     this.gravity = .1

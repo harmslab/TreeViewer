@@ -1,10 +1,10 @@
 // Loads data from newick file
 
-var LoaderWidget = function(selector, newick) {
+var LoaderWidget = function(selector) {
     
     var that = this;
     this.selector = selector;
-    this.newick = newick;
+    this.newick = Newick;
     this.width = parseInt($(this.selector).css("width"));
     
     // Build widget window

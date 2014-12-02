@@ -6,6 +6,7 @@ var Options = function(selector, tree_viewer) {
     this.render = "Dynamic";
     this.rooted = true;
     this.clades = true;
+    //this.loader_widget = 
     
     // Create modal
     this.modal = new Modal("options");
@@ -42,4 +43,4 @@ Options.prototype.representation = function(value){
         this.tree_viewer.static_tree(this.tree_viewer.data);
     }
     
-}
+};
