@@ -123,14 +123,7 @@ Modal.prototype.create_modal_toggle = function(text){
     return this.modal_toggle_button;
 };
 
-Modal.prototype.add_element = function(element){
-    /**
-    * Add element to modal
-    **/
-    $("#"+this.id+"_body").append(element);
-};
-
-Modal.prototype.add_element_to_grid = function(element){
+Modal.prototype.add_to_grid = function(element){
     /**
     * Adds a dropdown menu to the modal
     *
@@ -159,8 +152,14 @@ Modal.prototype.add_element_to_grid = function(element){
     this.items.push(element);
 };
 
+Modal.prototype.add_element = function(element){
+    /**
+    * Add element to modal
+    **/
+    $("#"+this.id+"_body").append(element);
+};
 
-Modal.prototype.dropdown_menu = function (id, title, options) {
+Modal.prototype.add_dropdown_menu = function (id, title, options) {
     /**
     * Adds a dropdown menu to the modal
     *
@@ -214,11 +213,11 @@ Modal.prototype.dropdown_menu = function (id, title, options) {
     
     menu.append(button, option_list);
            
-    this.add_element_to_grid(menu);
+    this.add_to_grid(menu);
     return button
 };
 
-Modal.prototype.toggle_button = function(id, text) {
+Modal.prototype.add_toggle_button = function(id, text) {
     /**
     * Adds a toggle button to the modal, can be used as a switch
     *
@@ -230,20 +229,32 @@ Modal.prototype.toggle_button = function(id, text) {
     *   text to display on toggle button
     **/
     var button = $("<button></button>")
-                .addClass("btn btn-primary")
+                .addClass("btn btn-default")
                 .attr("id", id)
                 .attr("data-toggle", "button")
                 .attr("type", "button")
-                .text(text);
+                .text(text)
+                .val("true")
+    
+    // Set button value to reflect toggle state
+    button.click(button, function(event){
+        var button = event.data;
+        if (button.val() == "true"){
+            button.val("false");
+        } else
+            button.val("true");
+    });
     
     var button_container = $("<div></div>")
                 .addClass("container")
                 .append(button);
                 
-    this.add_element_to_grid(button_container);  
+    this.add_to_grid(button_container);
+    
+    return button
 };
 
-Modal.prototype.sub_panel = function(id, title) {
+Modal.prototype.add_sub_panel = function(id, title) {
     /**
     * Adds a subpanel to the modal
     *

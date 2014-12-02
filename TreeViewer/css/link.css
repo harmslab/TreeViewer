@@ -46,14 +46,3 @@ CSS classes that handle zooming
   fill: none;
   pointer-events: all;
 }
-
-/* 
-TreeMap CSS classes
-*/
-#map_window {
-    position:absolute;
-}
-
-.zoom_box {
-    fill-opacity: .3; 
-}

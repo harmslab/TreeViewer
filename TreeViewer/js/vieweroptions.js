@@ -15,7 +15,6 @@ var ViewerOptions = function(viewerapp) {
     this.selector = this.viewerapp.selector;
     this.selector_id = $(this.selector).attr("id")
     this.element_id = "viewer_options";
-    this.tree_viewer = this.viewerapp.tree_viewer;
     this.options_button = null;
     
     // Build modal for tree customization
@@ -30,29 +29,19 @@ var ViewerOptions = function(viewerapp) {
     
     // Add Representation Option
     this.render_type = null;
-    this.render_id = "representation"
-    this.render_button = this.modal.dropdown_menu(this.render_id, 
+    this.render_id = "render"
+    this.render_button = this.modal.add_dropdown_menu(this.render_id, 
         "Rendering Type", ["Dynamic", "Static"]);
+    
+    // Add Tree Map Option
+    this.tree_map_on = "true";
+    this.tree_map_id = "tree_map"
+    this.tree_map_button = this.modal.add_toggle_button(this.tree_map_id, "Map off");
     
     // Grab and apply options when 'Apply' button is clicked.
     var that = this;
     var grab_settings = this.grab_settings;
     this.apply_button.click(that, grab_settings);
-};
-
-ViewerOptions.prototype.grab_settings = function(vieweroptions) { 
-    /**
-    * Grab settings from all elements on options modal.
-    **/
-    
-    // Grab the data from loader widget
-    var that = vieweroptions.data;
-    var tree_viewer = that.tree_viewer;
-    that.tree_viewer.data = that.loader.data;
-    
-    // Grab tree representation type
-    that.render_type = that.render_button.val()
-    that.render_as(that.render_type);
 };
 
 ViewerOptions.prototype.toggle_button = function() {
@@ -72,13 +61,34 @@ ViewerOptions.prototype.toggle_button = function() {
     return this.options_button;
 };
 
+ViewerOptions.prototype.grab_settings = function(vieweroptions) { 
+    /**
+    * Grab settings from all elements on options modal.
+    **/
+    
+    // Grab the data from loader widget
+    var that = vieweroptions.data;
+    var tree_viewer = that.viewerapp.tree_viewer;
+    that.viewerapp.tree_viewer.data = that.loader.data;
+    
+    // Grab tree representation type
+    that.render_type = that.render_button.val()
+    that.render_tree_as(that.render_type);
+    
+    // Add TreeMap
+    that.tree_map_on = that.tree_map_button.val();
+    if (that.tree_map_on == "true"){
+        that.viewerapp.tree_map.generate_map()  
+    };
+};
 
-ViewerOptions.prototype.render_as = function(value) {
+
+ViewerOptions.prototype.render_tree_as = function(value) {
     // Represent the tree dynamically or statically
     if (value == "Dynamic") {
-        this.tree_viewer.dynamic_tree(this.tree_viewer.data);
+        this.viewerapp.tree_viewer.dynamic_tree(this.viewerapp.tree_viewer.data);
     } else {
-        this.tree_viewer.static_tree(this.tree_viewer.data);
+        this.viewerapp.tree_viewer.static_tree(this.viewerapp.tree_viewer.data);
     }
     
 };

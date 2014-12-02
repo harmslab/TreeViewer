@@ -5,3 +5,16 @@
     margin-left: 10px;
     margin-right: 10px;
 }
+
+/* TreeMap CSS classes */
+#map_window {
+    position:absolute;
+}
+
+.zoom_box {
+    fill-opacity: .3; 
+}
+
+h4 {
+    margin:0px 0px 0px 0px;
+}

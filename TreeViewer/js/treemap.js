@@ -4,17 +4,20 @@
 // Authors: Zach Sailer
 
 var TreeMap = function (tree_viewer) { 
-    this.scale = .3;
+    
+    this.scale = .25;
+    this.tree_viewer = tree_viewer
+    this.height = null;
+    this.width == null;
+    this.map_svg = null;
+    this.map_body = null;
+    this.map_header = null;
+    this.map_panel = null;
+    this.zoom_box = null;
     this.zoom_behavior = null;
     
-    this.tree_viewer = tree_viewer
-    //this.height = this.tree_viewer.height;
-    //this.width = this.tree_viewer.width;
+    // Create map window
     this.map_window("#tree_viewer");
-    
-    // MAKE SURE YOU RUN THIS SOMEWHERE TO SHOW MAP
-    //this.generate_map();
-    
 };
 
 TreeMap.prototype.map_window = function(parent){
@@ -25,8 +28,8 @@ TreeMap.prototype.map_window = function(parent){
         .addClass("panel panel-default")
         .attr("id", "map_window")
         .css("position", "absolute")
-        .css("top", "50px")
-        .css("right", "50px")
+        .css("bottom", "10px")
+        .css("right", "10px")
         .draggable();
     
     $(parent).append(map_panel);
