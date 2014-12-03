@@ -9,6 +9,7 @@
 */
 var TreeMap = function (tree_viewer) { 
 
+    this.selector = "#tree_viewer";
     this.scale = .25;
     this.tree_viewer = tree_viewer
     this.height = null;
@@ -19,12 +20,9 @@ var TreeMap = function (tree_viewer) {
     this.map_panel = null;
     this.zoom_box = null;
     this.zoom_behavior = null;
-    
-    // Create map window
-    this.map_window("#tree_viewer");
 };
 
-TreeMap.prototype.map_window = function(parent){
+TreeMap.prototype.map_window = function(){
     /*
     Generate tree window as panel that hovers above webpage
     */
@@ -36,7 +34,7 @@ TreeMap.prototype.map_window = function(parent){
         .css("right", "10px")
         .draggable();
     
-    $(parent).append(map_panel);
+    $(this.selector).append(map_panel);
     this.map_panel = map_panel;
 };
 
@@ -117,6 +115,9 @@ TreeMap.prototype.generate_map = function() {
     Update map to any changes in the trees force representation
     */ 
     var that = this;
+    
+    // Create map window
+    that.map_window();
     that.clone_tree();
     that.create_zoom_box()
     that.click_map();
@@ -137,6 +138,16 @@ TreeMap.prototype.generate_map = function() {
         that.click_map();
     };
 };
+
+TreeMap.prototype.remove_map = function(){
+    /*
+    Remove map from webpage when called.
+    */
+    if (this.map_panel != null){
+        this.map_panel.remove();
+        this.map_panel = null;
+    }
+}
 
 TreeMap.prototype.click_map = function() {
     /*

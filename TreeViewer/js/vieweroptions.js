@@ -79,6 +79,8 @@ ViewerOptions.prototype.grab_settings = function(vieweroptions) {
     that.tree_map_on = that.tree_map_button.val();
     if (that.tree_map_on == "true"){
         that.viewerapp.tree_map.generate_map()  
+    } else {
+        that.viewerapp.tree_map.remove_map();
     };
 };
 
