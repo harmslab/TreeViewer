@@ -1,21 +1,28 @@
-// Copyright (c) Harms Lab
-// University of Oregon
-// Tree Map Class
-// Authors: Zach Sailer
+/* 
+    Copyright (c) Harms Lab
+    University of Oregon
+    TreeViewer Interactive Edition
+    Authors:    Zach Sailer
 
+    TreeMap object creates a draggable map in the corner of the webpage
+    for quick navigation and global view of full tree.
+*/
 var TreeMap = function (tree_viewer) { 
-    this.scale = .3;
-    this.zoom_behavior = null;
-    
+
+    this.selector = "#tree_viewer";
+    this.scale = .25;
     this.tree_viewer = tree_viewer
-    //this.height = this.tree_viewer.height;
-    //this.width = this.tree_viewer.width;
-    this.map_window("#tree_viewer");
-    this.generate_map();
-    
+    this.height = null;
+    this.width == null;
+    this.map_svg = null;
+    this.map_body = null;
+    this.map_header = null;
+    this.map_panel = null;
+    this.zoom_box = null;
+    this.zoom_behavior = null;
 };
 
-TreeMap.prototype.map_window = function(parent){
+TreeMap.prototype.map_window = function(){
     /*
     Generate tree window as panel that hovers above webpage
     */
@@ -23,11 +30,11 @@ TreeMap.prototype.map_window = function(parent){
         .addClass("panel panel-default")
         .attr("id", "map_window")
         .css("position", "absolute")
-        .css("top", "50px")
-        .css("right", "50px")
+        .css("bottom", "10px")
+        .css("right", "10px")
         .draggable();
     
-    $(parent).append(map_panel);
+    $(this.selector).append(map_panel);
     this.map_panel = map_panel;
 };
 
@@ -108,6 +115,9 @@ TreeMap.prototype.generate_map = function() {
     Update map to any changes in the trees force representation
     */ 
     var that = this;
+    
+    // Create map window
+    that.map_window();
     that.clone_tree();
     that.create_zoom_box()
     that.click_map();
@@ -128,6 +138,16 @@ TreeMap.prototype.generate_map = function() {
         that.click_map();
     };
 };
+
+TreeMap.prototype.remove_map = function(){
+    /*
+    Remove map from webpage when called.
+    */
+    if (this.map_panel != null){
+        this.map_panel.remove();
+        this.map_panel = null;
+    }
+}
 
 TreeMap.prototype.click_map = function() {
     /*

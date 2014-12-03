@@ -5,10 +5,6 @@ Webpage CSS
     position:relative;
 }
 
-.map-panel {
-    padding:10px 10px 10px 10px;
-}
-
 /*
 TreeViewer CSS stylesheets
 */
@@ -45,15 +41,4 @@ CSS classes that handle zooming
 .overlay {
   fill: none;
   pointer-events: all;
-}
-
-/* 
-TreeMap CSS classes
-*/
-#map_window {
-    position:absolute;
-}
-
-.zoom_box {
-    fill-opacity: .3; 
 }
