@@ -1,10 +1,14 @@
-// Copyright (c) Harms Lab
-// University of Oregon
-// Tree Map Class
-// Authors: Zach Sailer
+/* 
+    Copyright (c) Harms Lab
+    University of Oregon
+    TreeViewer Interactive Edition
+    Authors:    Zach Sailer
 
+    TreeMap object creates a draggable map in the corner of the webpage
+    for quick navigation and global view of full tree.
+*/
 var TreeMap = function (tree_viewer) { 
-    
+
     this.scale = .25;
     this.tree_viewer = tree_viewer
     this.height = null;

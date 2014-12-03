@@ -10,7 +10,7 @@
     contained in this class.
 */
 
-var TreeViewer = function (selector, data) {
+var TreeViewer = function (selector) {
     // version 2 of the phylogenetic tree viewer - interactive
     // creates the basic structure for a viewer below load box
     var that = this;
@@ -22,7 +22,7 @@ var TreeViewer = function (selector, data) {
     this.gravity = .1
     this.tree_viewer = null;
     this.representation = "dynamic";
-    this.data = data || null;
+    this.data = null;
     this.zoom = null;
     this.zoom_on = true;
     this.zoom_scale = 1;

@@ -14,8 +14,7 @@ var ViewerApp = function(){
     $('#main_page').append($('<div>').attr('id', 'tree_viewer'));
     
     this.selector = $('#tree_viewer')[0];
-    this.data = null;
     
-    this.tree_viewer = new TreeViewer(this.selector, this.data);
+    this.tree_viewer = new TreeViewer(this.selector);
     this.tree_map = new TreeMap(this.tree_viewer);
 };
